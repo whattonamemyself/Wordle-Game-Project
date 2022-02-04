@@ -1,6 +1,5 @@
 #===========================================================================
-# class FancyWord
-# Description: a colored word - each letter has a color attribute
+# class WordlePlayere
 #
 # Methods
 #    updateStats(won, tries) - 'won' - True if guessed word correctly
@@ -29,3 +28,37 @@
 from player import Player
 
 # TODO - make WordlePlayer
+
+class WordlePlayer:
+    def __init__(self):
+        self.won = 0
+        self.games = 0
+        self.streak = 0
+        self.maxstreak = 0
+        self.tries = [None] * 6 # 6 being maximum tries
+    def updateStats(self, won, tries):
+        if won:
+            self.tries[tries - 1] += 1
+            self.won += 1
+            self.streak += 1
+            self.maxstreak = max(self.maxstreak, self.streak)
+        else:
+            self.streak = 0
+        self.games += 1
+    def winPercentage(self):
+        return self.won / self.games
+    def gamesPlayed(self):
+        return self.games
+    def currentStreak(self):
+        return self.streak
+    def maxStreak(self):
+        return self.maxstreak
+    def displayStats(self):
+        print("Games Played:", self.gamesPlayed())
+        print("Win %:", self.winPercentage())
+        print("Current Streak:",self.currentStreak())
+        print("Max Streak:", self.maxStreak())
+        print("Guess Distribution")
+        peak = max(self.tries)
+        for i, v in enumerate(self.tries):
+            print(str(i+1)+": ", "#"*(v//peak*20 + 1))
