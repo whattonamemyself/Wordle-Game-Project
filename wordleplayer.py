@@ -29,13 +29,13 @@ from player import Player
 
 # TODO - make WordlePlayer
 
-class WordlePlayer:
+class WordlePlayer(Player):
     def __init__(self):
         self.won = 0
         self.games = 0
         self.streak = 0
         self.maxstreak = 0
-        self.tries = [None] * 6 # 6 being maximum tries
+        self.tries = [0] * 6 # 6 being maximum tries
     def updateStats(self, won, tries):
         if won:
             self.tries[tries - 1] += 1
@@ -61,4 +61,4 @@ class WordlePlayer:
         print("Guess Distribution")
         peak = max(self.tries)
         for i, v in enumerate(self.tries):
-            print(str(i+1)+": ", "#"*(v//peak*20 + 1))
+            print(str(i+1)+": ", "#"*(v*20//peak + 1))

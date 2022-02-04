@@ -13,3 +13,7 @@
 from fancyword import FancyWord
 
 # TODO - make WordleWord
+
+class WordleWord(FancyWord):
+    def __init__():
+        x = "uwu"

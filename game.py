@@ -32,7 +32,6 @@ def playWordle():
 
     # initialize WordBanks
     all_words = WordBank("words_alpha.txt")
-    ...
 
     # intialize settings to the baseline settings
     settings = Setting()
@@ -41,6 +40,11 @@ def playWordle():
     settings.setSetting('difficulty', 'normal')
 
     # make the player
+    player = WordlePlayer()
+    player.updateStats(True, 1)
+    player.updateStats(True, 3)
+    player.updateStats(True, 3)
+    player.displayStats()
 
     # start playing rounds of Wordle
 
