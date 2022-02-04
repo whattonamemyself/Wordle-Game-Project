@@ -40,7 +40,7 @@ def playWordle():
     settings.setSetting('difficulty', 'normal')
 
     # make the player
-    player = WordlePlayer()
+    player = WordlePlayer("uwu")
 
     print(all_words.getRandom())
 

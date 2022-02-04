@@ -1,5 +1,5 @@
 #===========================================================================
-# class WordlePlayere
+# class WordlePlayer
 #
 # Methods
 #    updateStats(won, tries) - 'won' - True if guessed word correctly
@@ -30,7 +30,8 @@ from player import Player
 # TODO - make WordlePlayer
 
 class WordlePlayer(Player):
-    def __init__(self):
+    def __init__(self, name):
+        super().__init__(name) # why
         self.won = 0
         self.games = 0
         self.streak = 0
