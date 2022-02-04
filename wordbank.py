@@ -10,13 +10,14 @@
 #    getNext() - get the next word in the list (wraps around when at end of list)
 #===========================================================================
 import random
+import os
 
 class WordBank:
 
     # inputs:
     #   filename - the filename that is read with the list of all the words
     def __init__(self, filename):
-        with open(filename) as wordfile:
+        with open(os.getcwd()+"\\Wordle Game Project\\"+filename) as wordfile:
             self.words = wordfile.read().split()
         self.index = 0
 

@@ -41,10 +41,8 @@ def playWordle():
 
     # make the player
     player = WordlePlayer()
-    player.updateStats(True, 1)
-    player.updateStats(True, 3)
-    player.updateStats(True, 3)
-    player.displayStats()
+
+    print(all_words.getRandom())
 
     # start playing rounds of Wordle
 
