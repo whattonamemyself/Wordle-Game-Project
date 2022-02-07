@@ -46,13 +46,7 @@ def playWordle():
     settings.setSetting('difficulty', 'normal')
 
     # make the player
-<<<<<<< HEAD
-    player = WordlePlayer("uwu")
-
-    print(all_words.getRandom())
-=======
     player = WordlePlayer(name)
->>>>>>> 17fa44f66d663d1827763626bce27af2d39fccba
 
     uwu = WordleGame(common5letter.getRandom())
     tmp = True
