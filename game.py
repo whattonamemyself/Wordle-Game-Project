@@ -53,12 +53,16 @@ def playWordle():
     cnt = 0
     while tmp and cnt < 6:
         guess = input()
+        if guess == "quit":
+            return
         if not all_words.contains(guess) or len(guess) != 5:
             print("Enter a valid word")
             continue
         x = uwu.guess(guess)
         print(x[1])
         tmp = not x[0]
+        if tmp:
+            print(uwu.getAlphabet())
         if tmp:
             cnt += 1
     if cnt == 6:

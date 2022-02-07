@@ -57,6 +57,8 @@ class WordleGame():
         return self.target
     def getGuessCount(self):
         return len(self.guesses)
+    def getAlphabet(self):
+        return self.alphabet
     def getGuess(self, i):
         assert i < len(self.guesses)
         return self.guesses[i]
