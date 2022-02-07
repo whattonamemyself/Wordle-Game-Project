@@ -68,7 +68,8 @@ def playWordle():
     if cnt == 6:
         print("YOU LOSE")
         print("The word was:" + uwu.getWordleWord())
-    print("YOU WIN")
+    else:
+        print("YOU WIN")
     # start playing rounds of Wordle
 
     # end game by displaying player stats

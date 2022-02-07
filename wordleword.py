@@ -35,12 +35,13 @@ from fancyword import FancyWord
 class WordleWord(FancyWord):
     def __init__(self, w):
         super().__init__(w)
+        super().setColor("gray")
     def isCorrect(self, pos):
-        return super().charAt(pos) == "green"
+        return super().colorAt(pos) == "green"
     def isMisplaced(self, pos):
-        return super().charAt(pos) == "yellow"
+        return super().colorAt(pos) == "yellow"
     def isNotUsed(self, pos):
-        return super().charAt(pos) == "gray"
+        return super().colorAt(pos) == "black"
     def setCorrect(self, pos):
         super().setColorAt(pos, "green")
     def setMisplaced(self, pos):

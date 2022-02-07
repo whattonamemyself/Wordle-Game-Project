@@ -1,5 +1,5 @@
 #===========================================================================
-# class WordlePlayere
+# class WordlePlayer
 #
 # Methods
 #    updateStats(won, tries) - 'won' - True if guessed word correctly
