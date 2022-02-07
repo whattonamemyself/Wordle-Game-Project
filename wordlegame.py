@@ -18,10 +18,11 @@
 from wordleword import WordleWord
 class WordleGame():
     def __init__(self, s):
-        self.wordleWord = WordleWord(s)
+        self.target = s
         self.guesses = []
+        self.alphabet = WordleWord("abcdefghijklmnopqrstuvwxyz")
     def guess(self, s):
-        target = self.wordleWord.getWord()
+        target = self.target
         res = WordleWord(s)
         mark = [False] * len(target)
         mark2 = [False] * len(s)
@@ -43,10 +44,17 @@ class WordleGame():
         for i in range(len(s)):
             if not mark2[i]:
                 res.setNotUsed(i)
+        for i, v in enumerate(s):
+            i2 = "abcdefghijklmnopqrstuvwxyz".find(v)
+            if res.isCorrect(i):
+                self.alphabet.setCorrect(i2)
+            elif res.isMisplaced(i):
+                if not self.alphabet.isCorrect(i2):
+                    self.alphabet.setMisplaced(i2)
         self.guesses.append(res)
         return (target == s, res)
     def getWordleWord(self):
-        return self.wordleWord
+        return self.target
     def getGuessCount(self):
         return len(self.guesses)
     def getGuess(self, i):
