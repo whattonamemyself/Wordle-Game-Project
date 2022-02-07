@@ -41,13 +41,8 @@ from player import Player
 # TODO - make WordlePlayer
 
 class WordlePlayer(Player):
-<<<<<<< HEAD
-    def __init__(self, name):
-        super().__init__(name) # why
-=======
     def __init__(self, n):
         super().__init__(n)
->>>>>>> 17fa44f66d663d1827763626bce27af2d39fccba
         self.won = 0
         self.games = 0
         self.streak = 0
