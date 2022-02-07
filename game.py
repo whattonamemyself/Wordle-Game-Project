@@ -3,6 +3,8 @@ from setting import Setting
 from wordbank import WordBank
 from wordleword import WordleWord
 from wordleplayer import WordlePlayer
+from wordlegame import WordleGame
+
 
 #======
 # markGuess - will "mark" the guess and the alphabet according to the word
@@ -42,8 +44,15 @@ def playWordle():
     # make the player
     player = WordlePlayer()
 
-    print(all_words.getRandom())
-
+    uwu = WordleGame(all_words.getRandom())
+    print(uwu.getWordleWord())
+    tmp = True
+    while tmp:
+        guess = input()
+        x = uwu.guess(guess)
+        print(x[1])
+        tmp = not x[0]
+    print("YOU WIN")
     # start playing rounds of Wordle
 
     # end game by displaying player stats

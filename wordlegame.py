@@ -26,7 +26,7 @@ class WordleGame():
         mark = [False] * len(target)
         mark2 = [False] * len(s)
         for i,v in enumerate(s):
-            if target[i] == v:
+            if i < len(target) and target[i] == v:
                 mark[i] = True
                 mark2[i] = True
                 res.setCorrect(i)
@@ -40,11 +40,11 @@ class WordleGame():
                     mark[i2] = True
                     mark2[i] = True
                     res.setMisplaced(i)
-        for i in len(s):
-            if not mark[i]:
+        for i in range(len(s)):
+            if not mark2[i]:
                 res.setNotUsed(i)
         self.guesses.append(res)
-        return res
+        return (target == s, res)
     def getWordleWord(self):
         return self.wordleWord
     def getGuessCount(self):
