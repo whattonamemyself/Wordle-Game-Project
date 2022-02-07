@@ -33,6 +33,7 @@ def playWordle():
     print("Let's play the game of Wordle!")
 
     # initialize WordBanks
+    common5letter = WordBank("common5letter.txt")
     all_words = WordBank("words_alpha.txt")
 
     # intialize settings to the baseline settings
@@ -44,11 +45,13 @@ def playWordle():
     # make the player
     player = WordlePlayer()
 
-    uwu = WordleGame(all_words.getRandom())
-    print(uwu.getWordleWord())
+    uwu = WordleGame(common5letter.getRandom())
     tmp = True
     while tmp:
         guess = input()
+        if not all_words.contains(guess) or len(guess) != 5:
+            print("Enter a valid word")
+            continue
         x = uwu.guess(guess)
         print(x[1])
         tmp = not x[0]
