@@ -50,7 +50,8 @@ def playWordle():
 
     uwu = WordleGame(common5letter.getRandom())
     tmp = True
-    while tmp:
+    cnt = 0
+    while tmp and cnt < 6:
         guess = input()
         if not all_words.contains(guess) or len(guess) != 5:
             print("Enter a valid word")
@@ -58,6 +59,11 @@ def playWordle():
         x = uwu.guess(guess)
         print(x[1])
         tmp = not x[0]
+        if tmp:
+            cnt += 1
+    if cnt == 6:
+        print("YOU LOSE")
+        print("The word was:" + uwu.getWordleWord())
     print("YOU WIN")
     # start playing rounds of Wordle
 
