@@ -36,15 +36,15 @@ class WordleWord(FancyWord):
     def __init__(self, w):
         super().__init__(w)
     def isCorrect(self, pos):
-        return self.charAt(pos) == "green"
+        return super().charAt(pos) == "green"
     def isMisplaced(self, pos):
-        return self.charAt(pos) == "yellow"
+        return super().charAt(pos) == "yellow"
     def isNotUsed(self, pos):
-        return self.charAt(pos) == "gray"
+        return super().charAt(pos) == "gray"
     def setCorrect(self, pos):
-        self.setChColor(pos, "green")
+        super().setChColor(pos, "green")
     def setMisplaced(self, pos):
-        self.setChColor(pos, "yellow")
+        super().setChColor(pos, "yellow")
     def setNotUsed(self, pos):
-        self.setChColor(pos, "gray")
+        super().setChColor(pos, "gray")
     
