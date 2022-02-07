@@ -42,9 +42,9 @@ class WordleWord(FancyWord):
     def isNotUsed(self, pos):
         return super().charAt(pos) == "gray"
     def setCorrect(self, pos):
-        super().setChColor(pos, "green")
+        super().setColorAt(pos, "green")
     def setMisplaced(self, pos):
-        super().setChColor(pos, "yellow")
+        super().setColorAt(pos, "yellow")
     def setNotUsed(self, pos):
-        super().setChColor(pos, "gray")
+        super().setColorAt(pos, "gray")
     
