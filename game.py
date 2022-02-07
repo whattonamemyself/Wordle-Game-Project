@@ -32,6 +32,9 @@ def playRound(players, words, all_words, settings):
 def playWordle():
     print("Let's play the game of Wordle!")
 
+    print("what is the name of which you choose to call yourself")
+    name = input()
+
     # initialize WordBanks
     common5letter = WordBank("common5letter.txt")
     all_words = WordBank("words_alpha.txt")
@@ -43,7 +46,7 @@ def playWordle():
     settings.setSetting('difficulty', 'normal')
 
     # make the player
-    player = WordlePlayer()
+    player = WordlePlayer(name)
 
     uwu = WordleGame(common5letter.getRandom())
     tmp = True

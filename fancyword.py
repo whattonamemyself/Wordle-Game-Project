@@ -14,7 +14,7 @@
 #   - getChColor(pos) - returns the color of the letter at pos
 #   - setChColor(pos, color) - sets the color of the letter at pos to color
 #   - __str__() - returns an ANSI colored string of the word
-#   - __eq__() - compares the word of two Fancy words hello eric
+#   - __eq__() - compares the word of two Fancy words
 #===========================================================================
 
 class FancyWord:
