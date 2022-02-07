@@ -25,13 +25,29 @@
 #      5: # 0
 #      6: # 0
 #=============
+#===========================================================================
+# Description: a card player with money and a hand of stack_of_cards
+#
+# State Attributes
+#    name - string - the name of the player
+#    score - integer - how many points the player has
+# Methods
+#    introduce() - prints out message "Hi, my name is ..."
+#    __str__() - returns a string ex. 'Joe: 5 points'
+#    getName() - returns the name of the player
+#===========================================================================
 from player import Player
 
 # TODO - make WordlePlayer
 
 class WordlePlayer(Player):
+<<<<<<< HEAD
     def __init__(self, name):
         super().__init__(name) # why
+=======
+    def __init__(self, n):
+        super().__init__(n)
+>>>>>>> 17fa44f66d663d1827763626bce27af2d39fccba
         self.won = 0
         self.games = 0
         self.streak = 0
