@@ -10,7 +10,6 @@
 #    getNext() - get the next word in the list (wraps around when at end of list)
 #===========================================================================
 import random
-import os
 
 class WordBank:
 
