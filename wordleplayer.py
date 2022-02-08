@@ -58,7 +58,7 @@ class WordlePlayer(Player):
             self.streak = 0
         self.games += 1
     def winPercentage(self):
-        return self.won / self.games
+        return self.won / self.games * 100
     def gamesPlayed(self):
         return self.games
     def currentStreak(self):
@@ -72,5 +72,7 @@ class WordlePlayer(Player):
         print("Max Streak:", self.maxStreak())
         print("Guess Distribution")
         peak = max(self.tries)
+        if peak == 0:
+            peak = 1
         for i, v in enumerate(self.tries):
             print(str(i+1)+": ", "#"*(v*20//peak + 1))

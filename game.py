@@ -48,31 +48,43 @@ def playWordle():
     # make the player
     player = WordlePlayer(name)
 
-    uwu = WordleGame(common5letter.getRandom())
-    tmp = True
-    cnt = 0
-    while tmp and cnt < 6:
-        guess = input()
-        if guess == "quit":
-            return
-        if not all_words.contains(guess) or len(guess) != 5:
-            print("Enter a valid word")
-            continue
-        x = uwu.guess(guess)
-        print(x[1])
-        tmp = not x[0]
-        if tmp:
-            print(uwu.getAlphabet())
-        if tmp:
-            cnt += 1
-    if cnt == 6:
-        print("YOU LOSE")
-        print("The word was:" + uwu.getWordleWord())
-    else:
-        print("YOU WIN")
-    # start playing rounds of Wordle
-
-    # end game by displaying player stats
+    tmp2 = True
+    while tmp2:
+        uwu = WordleGame(common5letter.getRandom())
+        tmp = True
+        cnt = 1
+        while tmp and cnt <= 6:
+            print("Enter a 5 letter word")
+            guess = input()
+            if guess == "quit":
+                cnt = 7
+                break
+            if not all_words.contains(guess) or len(guess) != 5:
+                print("Enter a valid word")
+                continue
+            x = uwu.guess(guess)
+            print(x[1])
+            tmp = not x[0]
+            if tmp:
+                print(uwu.getAlphabet())
+            if tmp:
+                cnt += 1
+        if cnt == 7:
+            print("YOU LOSE")
+            print("The word was:" + uwu.getWordleWord())
+            player.updateStats(False, -1)
+        else:
+            print("YOU WIN")
+            player.updateStats(True, cnt)
+        player.displayStats()
+        print("Play again? y / n")
+        asdf = input().lower()
+        if not (asdf == "yes" or asdf == "y"):
+            tmp2 = False
+    
+    print("Thanks for Playing Wordle!!")
+    player.displayStats()
+            
 
 def main():
     playWordle()
