@@ -25,8 +25,35 @@ def markGuess(word, guess, alphabet):
 #   all_words - Wordbank of the legal words to guess
 #   settings - Settings of game
 #======
-def playRound(players, words, all_words, settings):
-    pass # TODO
+def playRound(player, words, all_words, settings):
+    
+        uwu = WordleGame(words.getRandom())
+        tmp = True
+        cnt = 1
+        while tmp and cnt <= settings.getValue('maxguess'):
+            print("Enter a 5 letter word")
+            guess = input()
+            if guess == "quit":
+                cnt = settings.getValue('maxguess')+1
+                break
+            if not all_words.contains(guess) or len(guess) != 5:
+                print("Enter a valid word")
+                continue
+            x = uwu.guess(guess)
+            print(x[1])
+            tmp = not x[0]
+            if tmp:
+                print(uwu.getAlphabet())
+            if tmp:
+                cnt += 1
+        if cnt == settings.getValue('maxguess')+1:
+            print("YOU LOSE")
+            print("The word was:" + uwu.getWordleWord())
+            player.updateStats(False, -1)
+        else:
+            print("YOU WIN")
+            player.updateStats(True, cnt)
+        player.displayStats()
 
 
 def playWordle():
@@ -50,33 +77,7 @@ def playWordle():
 
     tmp2 = True
     while tmp2:
-        uwu = WordleGame(common5letter.getRandom())
-        tmp = True
-        cnt = 1
-        while tmp and cnt <= 6:
-            print("Enter a 5 letter word")
-            guess = input()
-            if guess == "quit":
-                cnt = 7
-                break
-            if not all_words.contains(guess) or len(guess) != 5:
-                print("Enter a valid word")
-                continue
-            x = uwu.guess(guess)
-            print(x[1])
-            tmp = not x[0]
-            if tmp:
-                print(uwu.getAlphabet())
-            if tmp:
-                cnt += 1
-        if cnt == 7:
-            print("YOU LOSE")
-            print("The word was:" + uwu.getWordleWord())
-            player.updateStats(False, -1)
-        else:
-            print("YOU WIN")
-            player.updateStats(True, cnt)
-        player.displayStats()
+        playRound(player, common5letter, all_words, settings)
         print("Play again? y / n")
         asdf = input().lower()
         if not (asdf == "yes" or asdf == "y"):
