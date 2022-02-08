@@ -78,7 +78,7 @@ def playRound(player, words, all_words, settings):
             
         if cnt == settings.getValue('maxguess')+1:
             print("YOU LOSE")
-            print("The word was:" + uwu)
+            print("The word was:" + word)
             player.updateStats(False, -1)
         else:
             print("YOU WIN")
