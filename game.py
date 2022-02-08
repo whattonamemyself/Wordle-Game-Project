@@ -1,9 +1,13 @@
-import string
+'''
+Current snapshot: finished basic skeleton of the game, playable but no extra features e.g. settings
+'''
+
+
+
 from setting import Setting
 from wordbank import WordBank
 from wordleword import WordleWord
 from wordleplayer import WordlePlayer
-from wordlegame import WordleGame
 
 
 #======
@@ -13,7 +17,33 @@ from wordlegame import WordleGame
 #   alphabet - WordleWord of the letters a-z that have been marked
 #======
 def markGuess(word, guess, alphabet):
-    pass  # TODOa
+    s = guess.getWord()
+    mark = [False] * len(word)
+    mark2 = [False] * len(s)
+    for i,v in enumerate(s):
+        if i < len(word) and word[i] == v:
+            mark[i] = True
+            mark2[i] = True
+            guess.setCorrect(i)
+            alphabet.setCorrect(alphabet.getWord().index(v))
+    for i,v in enumerate(s):
+        if mark2[i]:
+            continue
+        for i2, v2 in enumerate(word):
+            if mark[i2]:
+                continue
+            if v == v2:
+                mark[i2] = True
+                mark2[i] = True
+                guess.setMisplaced(i)
+                if not alphabet.isCorrect(alphabet.getWord().index(v)):
+                    alphabet.setMisplaced(alphabet.getWord().index(v))
+    for i,v in enumerate(s):
+        if not mark2[i]:
+            guess.setNotUsed(i)
+            if alphabet.colorAt(alphabet.getWord().index(v)):
+               alphabet.setColorAt(alphabet.getWord().index(v), "blue")
+    return not word == s
 
 #======
 # playRound(players, words, all_words, settings)
@@ -26,8 +56,8 @@ def markGuess(word, guess, alphabet):
 #   settings - Settings of game
 #======
 def playRound(player, words, all_words, settings):
-    
-        uwu = WordleGame(words.getRandom())
+        alphabet = WordleWord("abcdefghijklmnopqrstuvwxyz")
+        word = words.getRandom()
         tmp = True
         cnt = 1
         while tmp and cnt <= settings.getValue('maxguess'):
@@ -39,16 +69,16 @@ def playRound(player, words, all_words, settings):
             if not all_words.contains(guess) or len(guess) != 5:
                 print("Enter a valid word")
                 continue
-            x = uwu.guess(guess)
-            print(x[1])
-            tmp = not x[0]
+            guess = WordleWord(guess)
+            tmp = markGuess(word, guess, alphabet)
+            print(guess)
             if tmp:
-                print(uwu.getAlphabet())
-            if tmp:
+                print(alphabet)
                 cnt += 1
+            
         if cnt == settings.getValue('maxguess')+1:
             print("YOU LOSE")
-            print("The word was:" + uwu.getWordleWord())
+            print("The word was:" + uwu)
             player.updateStats(False, -1)
         else:
             print("YOU WIN")
