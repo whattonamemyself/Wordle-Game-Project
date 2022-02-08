@@ -60,7 +60,7 @@ def markGuess(word, guess, alphabet):
 #======
 def playRound(player, words, all_words, settings):
         alphabet = WordleWord("abcdefghijklmnopqrstuvwxyz")
-        uwu = words.getRandom()
+        word = words.getRandom()
         tmp = True
         cnt = 1
         while tmp and cnt <= settings.getValue('maxguess'):
@@ -73,7 +73,7 @@ def playRound(player, words, all_words, settings):
                 print("Enter a valid word")
                 continue
             guess = WordleWord(guess)
-            tmp = markGuess(uwu, guess, alphabet)
+            tmp = markGuess(word, guess, alphabet)
             print(guess)
             if tmp: #if you didn't get the correct answer
                 print(alphabet)
@@ -81,7 +81,7 @@ def playRound(player, words, all_words, settings):
             
         if cnt == settings.getValue('maxguess')+1: # too many guesses
             print("YOU LOSE")
-            print("The word was:" + uwu)
+            print("The word was:" + word)
             player.updateStats(False, -1)
         else:
             print("YOU WIN")
@@ -92,7 +92,7 @@ def playRound(player, words, all_words, settings):
 def playWordle():
     print("Let's play the game of Wordle!")
 
-    print("what is the name of which you choose to call yourself")
+    print("What is your name?")
     name = input()
 
     # initialize WordBanks
