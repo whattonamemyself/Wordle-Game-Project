@@ -59,7 +59,7 @@ def playRound(player, words, all_words, settings):
 def playWordle():
     print("Let's play the game of Wordle!")
 
-    print("what is the name of which you choose to call yourself")
+    print("What is your name?")
     name = input()
 
     # initialize WordBanks

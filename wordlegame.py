@@ -48,7 +48,7 @@ class WordleGame():
             if not mark2[i]:
                 res.setNotUsed(i)
                 if self.alphabet.colorAt(self.alphabet.getWord().index(v)):
-                    self.alphabet.setColorAt(self.alphabet.getWord().index(v), "blue")
+                    self.alphabet.setColorAt(self.alphabet.getWord().index(v), "red")
         self.guesses.append(res)
         return (target == s, res)
     def getWordleWord(self):
