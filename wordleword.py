@@ -35,7 +35,6 @@ from fancyword import FancyWord
 class WordleWord(FancyWord):
     def __init__(self, w):
         super().__init__(w)
-        super().setColor("gray")
     def isCorrect(self, pos):
         return super().colorAt(pos) == "green"
     def isMisplaced(self, pos):

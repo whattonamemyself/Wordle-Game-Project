@@ -44,9 +44,11 @@ class WordleGame():
                     res.setMisplaced(i)
                     if not self.alphabet.isCorrect(self.alphabet.getWord().index(v)):
                         self.alphabet.setMisplaced(self.alphabet.getWord().index(v))
-        for i in range(len(s)):
+        for i,v in enumerate(s):
             if not mark2[i]:
                 res.setNotUsed(i)
+                if self.alphabet.colorAt(self.alphabet.getWord().index(v)):
+                    self.alphabet.setColorAt(self.alphabet.getWord().index(v), "blue")
         self.guesses.append(res)
         return (target == s, res)
     def getWordleWord(self):
