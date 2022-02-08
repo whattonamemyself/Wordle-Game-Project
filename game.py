@@ -18,14 +18,16 @@ from wordleplayer import WordlePlayer
 #======
 def markGuess(word, guess, alphabet):
     s = guess.getWord()
-    mark = [False] * len(word)
-    mark2 = [False] * len(s)
+    mark = [False] * len(word) # is the character from target word used?
+    mark2 = [False] * len(s) # is the character from guess used?
+    # First iteration - mark correct words
     for i,v in enumerate(s):
         if i < len(word) and word[i] == v:
             mark[i] = True
             mark2[i] = True
             guess.setCorrect(i)
             alphabet.setCorrect(alphabet.getWord().index(v))
+    # Second iteration - mark misplaced words
     for i,v in enumerate(s):
         if mark2[i]:
             continue
@@ -38,6 +40,7 @@ def markGuess(word, guess, alphabet):
                 guess.setMisplaced(i)
                 if not alphabet.isCorrect(alphabet.getWord().index(v)):
                     alphabet.setMisplaced(alphabet.getWord().index(v))
+    #Third iteration - mark the rest as unused
     for i,v in enumerate(s):
         if not mark2[i]:
             guess.setNotUsed(i)
@@ -63,20 +66,20 @@ def playRound(player, words, all_words, settings):
         while tmp and cnt <= settings.getValue('maxguess'):
             print("Enter a 5 letter word")
             guess = input()
-            if guess == "quit":
-                cnt = settings.getValue('maxguess')+1
+            if guess == "quit": # quit
+                cnt = settings.getValue('maxguess')+1 # a little hack ;)
                 break
-            if not all_words.contains(guess) or len(guess) != 5:
+            if not all_words.contains(guess) or len(guess) != 5: #invalid word
                 print("Enter a valid word")
                 continue
             guess = WordleWord(guess)
             tmp = markGuess(uwu, guess, alphabet)
             print(guess)
-            if tmp:
+            if tmp: #if you didn't get the correct answer
                 print(alphabet)
                 cnt += 1
             
-        if cnt == settings.getValue('maxguess')+1:
+        if cnt == settings.getValue('maxguess')+1: # too many guesses
             print("YOU LOSE")
             print("The word was:" + uwu)
             player.updateStats(False, -1)
