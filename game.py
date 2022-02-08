@@ -8,7 +8,6 @@ from setting import Setting
 from wordbank import WordBank
 from wordleword import WordleWord
 from wordleplayer import WordlePlayer
-from wordlegame import WordleGame
 
 
 #======
