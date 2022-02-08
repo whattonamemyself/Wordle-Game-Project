@@ -31,6 +31,7 @@ class WordleGame():
                 mark[i] = True
                 mark2[i] = True
                 res.setCorrect(i)
+                self.alphabet.setCorrect(self.alphabet.getWord().index(v))
         for i,v in enumerate(s):
             if mark2[i]:
                 continue
@@ -41,16 +42,13 @@ class WordleGame():
                     mark[i2] = True
                     mark2[i] = True
                     res.setMisplaced(i)
-        for i in range(len(s)):
+                    if not self.alphabet.isCorrect(self.alphabet.getWord().index(v)):
+                        self.alphabet.setMisplaced(self.alphabet.getWord().index(v))
+        for i,v in enumerate(s):
             if not mark2[i]:
                 res.setNotUsed(i)
-        for i, v in enumerate(s):
-            i2 = "abcdefghijklmnopqrstuvwxyz".find(v)
-            if res.isCorrect(i):
-                self.alphabet.setCorrect(i2)
-            elif res.isMisplaced(i):
-                if not self.alphabet.isCorrect(i2):
-                    self.alphabet.setMisplaced(i2)
+                if self.alphabet.colorAt(self.alphabet.getWord().index(v)):
+                    self.alphabet.setColorAt(self.alphabet.getWord().index(v), "blue")
         self.guesses.append(res)
         return (target == s, res)
     def getWordleWord(self):
