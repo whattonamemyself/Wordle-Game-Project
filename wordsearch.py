@@ -1,5 +1,19 @@
 from wordbank import WordBank
 
+commonwords = WordBank("commonwords.txt")
+allwords = WordBank("words_alpha.txt")
+allchars = WordBank("alphabet.txt")
+#delta towards a direction
+direction = [
+    (1,0),
+    (1,1),
+    (0,1),
+    (-1,1),
+    (-1,0),
+    (-1,-1),
+    (0,-1),
+    (1,-1)
+]
 class WSWord: # a word inside of the word search
     def __init__(self, x, y, dir, len, word):
         self.x = x
@@ -14,9 +28,6 @@ class WordSearch:
         self.target = ""
         for i in self.ch:
             i = [None] * w
-        self.commonwords = WordBank("commonwords.txt")
-        self.allwords = WordBank("words_alpha.txt")
-        self.allchars = WordBank("alphabet.txt")
     #tries to place a word in the generating wordsearch
     def placeWord(self, WSWord):
         (x, y) = (WSWord.x, WSWord.y)
@@ -30,7 +41,7 @@ class WordSearch:
         for i in self.ch:
             for x in self.ch:
                 if x == None:
-                    x = self.allchars.getRandom()
+                    x = allchars.getRandom()
 
     def __str__(self):
         res = ""
