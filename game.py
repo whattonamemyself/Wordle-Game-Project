@@ -63,9 +63,9 @@ def playRound(player, words, all_words, settings):
         word = words.getRandom()
         tmp = True
         cnt = 1
+        guesses = []
         while tmp and cnt <= settings.getValue('maxguess'):
-            print("Enter a 5 letter word")
-            guess = input()
+            guess = input("Enter a 5-letter guess: ")
             if guess == "quit": # quit
                 cnt = settings.getValue('maxguess')+1 # a little hack ;)
                 break
@@ -74,26 +74,30 @@ def playRound(player, words, all_words, settings):
                 continue
             guess = WordleWord(guess)
             tmp = markGuess(word, guess, alphabet)
-            print(guess)
-            if tmp: #if you didn't get the correct answer
-                print(alphabet)
-                cnt += 1
-            
+            guesses.append(guess)
+            print("\n")
+            for i,v in enumerate(guesses):
+                print(str(i+1)+": "+str(v))
+            print("\n"+str(alphabet)+"\n")
+            cnt += 1
+        
         if cnt == settings.getValue('maxguess')+1: # too many guesses
-            print("YOU LOSE")
-            print("The word was:" + word)
+            print("Sorry, you couldn't find the correct word!")
+            print("The word was: " + word)
+            print("\n")
             player.updateStats(False, -1)
         else:
-            print("YOU WIN")
+            print("Good job, you figured out the word")
+            print("\n")
             player.updateStats(True, cnt)
         player.displayStats()
 
 
 def playWordle():
-    print("Let's play the game of Wordle!")
-
-    print("What is your name?")
-    name = input()
+    print("Let's play the game of Wordle!!")
+    name = input("Enter your name: ")
+    print("Welcome " + name + "!\n")
+    print("OK, let's play Wordle!!\n")
 
     # initialize WordBanks
     common5letter = WordBank("common5letter.txt")
@@ -111,13 +115,16 @@ def playWordle():
     tmp2 = True
     while tmp2:
         playRound(player, common5letter, all_words, settings)
-        print("Play again? y / n")
-        asdf = input().lower()
-        if not (asdf == "yes" or asdf == "y"):
+        playAgain = input("Did you want to play again? (y/n): ")
+        playAgain = input().lower()
+        print("\n")
+        if not (playAgain == "yes" or playAgain == "y"):
             tmp2 = False
     
-    print("Thanks for Playing Wordle!!")
+    print("\n")
     player.displayStats()
+    print("\n")
+    print("Bye! It was good playing Wordle with you!")
             
 
 def main():
