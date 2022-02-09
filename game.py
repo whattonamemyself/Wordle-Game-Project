@@ -115,8 +115,7 @@ def playWordle():
     tmp2 = True
     while tmp2:
         playRound(player, common5letter, all_words, settings)
-        playAgain = input("Did you want to play again? (y/n): ")
-        playAgain = input().lower()
+        playAgain = input("Did you want to play again? (y/n): ").lower()
         print("\n")
         if not (playAgain == "yes" or playAgain == "y"):
             tmp2 = False
