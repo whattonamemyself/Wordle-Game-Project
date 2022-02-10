@@ -1,14 +1,21 @@
 import tkinter as tk
+from tkinter import *
 class Screen:
     def __init__(self):
-        self.window = tk.Tk()
-        self.window.geometry("2000x1000")
-        self.window.configure(background="black")
-        self.heading = tk.Label(self.window, font = "Rubik", height = 2, 
-                            width = 8, text = "Wordle+", bg = "black", fg = "white")
-        self.heading.place(relx = 0.5,
-                   rely = 0.5,
-                   anchor = 'center')
-        self.heading.pack()
+        self.window = Tk()
+        self.canvas = Canvas(width = 2000, height = 1000)
+        self.canvas.pack()
+        self.heading = Label(self.window, text = "Wordle +", font = "Rubik 40 bold", fg = "white")
+        self.heading.place(x = 960, y = 30, anchor = CENTER)
+        self.squares = []
+        for x in range(770, 1170, 80):
+            square = []
+            for y in range(175, 605, 80):
+                square.append([x,y,x+70,y-70])
+            self.squares.append(square)
+        for i in self.squares:
+            for j in i:
+                self.canvas.create_rectangle(j[0], j[1], j[2], j[3])
         self.window.mainloop()
 screen = Screen()
+
