@@ -35,6 +35,3 @@ class WordBank:
             self.index = 0
 
         return word
-
-            
-
