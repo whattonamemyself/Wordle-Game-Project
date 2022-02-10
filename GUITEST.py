@@ -15,7 +15,7 @@ class Screen:
             self.squares.append(square)
         for i in self.squares:
             for j in i:
-                self.canvas.create_rectangle(j[0], j[1], j[2], j[3])
+                self.canvas.create_rectangle(j[0], j[1], j[2], j[3], outline = "white")
         self.window.mainloop()
 screen = Screen()
 
