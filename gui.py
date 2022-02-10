@@ -16,6 +16,10 @@ class Screen:
         for i in self.squares:
             for j in i:
                 self.canvas.create_rectangle(j[0], j[1], j[2], j[3], outline = "white")
+        #self.alphabet = []
+        # alphabet = "abcdefghijklmnopqrstuvwxyz".upper()
+        # for x in range(670, 1270, 60):
+        #     self.letter = Label(self.window, text = alphabet[])
         self.window.mainloop()
 screen = Screen()
 
