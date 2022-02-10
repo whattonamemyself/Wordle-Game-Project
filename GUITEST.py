@@ -3,9 +3,9 @@ from tkinter import *
 class Screen:
     def __init__(self):
         self.window = Tk()
-        self.canvas = Canvas(width = 2000, height = 1000)
+        self.canvas = Canvas(width = 2000, height = 1000, bg = "black")
         self.canvas.pack()
-        self.heading = Label(self.window, text = "Wordle +", font = "Rubik 40 bold", fg = "white")
+        self.heading = Label(self.window, text = "Wordle +", font = "Rubik 40 bold", fg = "white", bg = "black")
         self.heading.place(x = 960, y = 30, anchor = CENTER)
         self.squares = []
         for x in range(770, 1170, 80):
