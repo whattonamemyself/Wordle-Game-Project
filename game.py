@@ -1,5 +1,6 @@
 '''
-Current snapshot: finished basic skeleton of the game, playable but no extra features e.g. settings
+Eric Hsu Shanker Ram
+Snapshot #1: Finished whole wordle game besides settings, + made a word search, hoping to merge the games in the future uwu
 '''
 
 
