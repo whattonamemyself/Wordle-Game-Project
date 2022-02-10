@@ -80,7 +80,8 @@ def playRound(player, words, all_words, settings):
             for i,v in enumerate(guesses):
                 print(str(i+1)+": "+str(v))
             print("\n"+str(alphabet)+"\n")
-            cnt += 1
+            if not tmp:
+                cnt += 1
         
         if cnt == settings.getValue('maxguess')+1: # too many guesses
             print("Sorry, you couldn't find the correct word!")
