@@ -37,6 +37,7 @@ class WordSearch:
         self.guesses = []
         self.ch = [None] * w
         self.target = ""
+        self.wordlist = []
         for i in range(len(self.ch)):
             self.ch[i] = [None] * h
     #can you place the word in the wordsearch? returns # of characters already placed, -1 if can't place
@@ -69,10 +70,21 @@ class WordSearch:
     #generates a partial wordsearch, i broke it into parts to increase efficiency as 16*10^4 is faster than 40^4
     def genPartialWordSearch(self, xPos, yPos, width, height):
         tries = 0
-        wordlist = []
         while tries < 5:
             s = []
             for i in range(10):
+                word = ""
+                while True:
+                    word = commonwords.getRandom()
+                    if word in self.wordlist:
+                        continue
+                    if len(word) <= 6: #encourages shorter words
+                        break
+                    elif len(word) <= 8 and random.randint(0,1) == 0: #1/2 chance
+                        break
+                    elif len(word) > 8 and random.randint(0,5) == 0: # 1/6 chance
+                        break
+
                 s.append(commonwords.getRandom())
             maxmatch = 0
             maxmatchlist = []
@@ -101,14 +113,12 @@ class WordSearch:
                     elif random.randint(0,5) == 0: #reduce the chances of a plain word so u have to spend more time searching ;)
                         break
                 self.placeWord(chosen)
-                wordlist.append(chosen.getWord())
+                self.wordlist.append(chosen.getWord())
             else:
                 tries += 1
-        return wordlist
                             
     #generates the word search, returns target word
     def genWordSearch(self):
-        wordlist = []
         width = 5
         height = 5
         for i in range(len(self.ch)//width):
@@ -117,14 +127,15 @@ class WordSearch:
                 yPos = x*height
                 width2 = min(width, len(self.ch) - xPos)
                 height2 = min(height, len(self.ch[0])-yPos)
-                wordlist.extend(self.genPartialWordSearch(xPos, yPos, width2, height2))
+                self.genPartialWordSearch(xPos, yPos, width2, height2)
+                print(self)
         #fill in the rest
         for i in range(len(self.ch)):
             for x in range(len(self.ch[0])):
                 if self.ch[i][x] == None:
                     self.ch[i][x] = allchars.getRandom()
-        print(len(wordlist))
-        self.target = random.choice(wordlist)
+        print(len(self.wordlist))
+        self.target = random.choice(self.wordlist)
         return self.target
     #returns the string of text
     def getWord(self, x, y, dir, len):
@@ -154,7 +165,10 @@ class WordSearch:
         res = ""
         for i in range(len(self.ch[0])):
             for x in range(len(self.ch)):
-                res += self.ch[x][i] + " "
+                if self.ch[x][i] == None:
+                    res += "_ "
+                else:
+                    res += self.ch[x][i] + " "
             res += '\n'
         return res
 
