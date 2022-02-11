@@ -12,23 +12,18 @@ class InputWrapper: #deals with all the input stuff
         
     def motion(self, e):
         self.mouseX, self.mouseY = e.x, e.y
-        print(e.x,e.y)
 
     def mousePressed(self, e):
         self.mouseDown = True
-        print(self.mouseDown)
 
     def mouseReleased(self, e):
         self.mouseDown = False
-        print(self.mouseDown)
 
     def keyPressed(self, e):
         self.keys[e.char] = True
-        print(self.keys)
 
     def keyReleased(self, e):
         self.keys[e.char] = False
-        print(self.keys)
 
     def getMousePosition(self):
         return (self.mouseX, self.mouseY)

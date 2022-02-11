@@ -34,6 +34,8 @@ class WSWord: # a word inside of the word search
 class WordSearch:
     #initializes an empty matrix
     def __init__(self, w,h):
+        assert w > 0
+        assert h > 0
         self.guesses = []
         self.ch = [None] * w
         self.target = ""
@@ -72,7 +74,7 @@ class WordSearch:
         tries = 0
         while tries < 5:
             s = []
-            for i in range(10):
+            for i in range(8):
                 word = ""
                 while True:
                     word = commonwords.getRandom()
@@ -128,7 +130,6 @@ class WordSearch:
                 width2 = min(width, len(self.ch) - xPos)
                 height2 = min(height, len(self.ch[0])-yPos)
                 self.genPartialWordSearch(xPos, yPos, width2, height2)
-                print(self)
         #fill in the rest
         for i in range(len(self.ch)):
             for x in range(len(self.ch[0])):
@@ -171,7 +172,12 @@ class WordSearch:
                     res += self.ch[x][i] + " "
             res += '\n'
         return res
-
+    def getWidth(self):
+        return len(self.ch)
+    def getHeight(self):
+        return len(self.ch[0])
+    def getGrid(self):
+        return self.ch
 
 def main():
     x = WordSearch(24,14)
