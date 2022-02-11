@@ -174,7 +174,7 @@ class WordSearch:
 
 
 def main():
-    x = WordSearch(20,10)
+    x = WordSearch(24,14)
     target = x.genWordSearch()
     print(target)
     print(x)

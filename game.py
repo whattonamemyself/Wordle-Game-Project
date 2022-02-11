@@ -1,5 +1,6 @@
 '''
-Current snapshot: finished basic skeleton of the game, playable but no extra features e.g. settings
+Eric Hsu Shanker Ram
+Snapshot #1: Finished whole wordle game besides settings, + made a word search, hoping to merge the games in the future uwu
 '''
 
 
@@ -79,7 +80,8 @@ def playRound(player, words, all_words, settings):
             for i,v in enumerate(guesses):
                 print(str(i+1)+": "+str(v))
             print("\n"+str(alphabet)+"\n")
-            cnt += 1
+            if not tmp:
+                cnt += 1
         
         if cnt == settings.getValue('maxguess')+1: # too many guesses
             print("Sorry, you couldn't find the correct word!")
