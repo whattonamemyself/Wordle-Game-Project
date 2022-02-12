@@ -107,13 +107,7 @@ class WordSearch:
                 continue
             if len(maxmatchlist):
                 tries = 0
-                chosen = ""
-                while True:
-                    chosen = random.choice(maxmatchlist)
-                    if chosen.dir != 0:
-                        break
-                    elif random.randint(0,5) == 0: #reduce the chances of a plain word so u have to spend more time searching ;)
-                        break
+                chosen = random.choice(maxmatchlist)
                 self.placeWord(chosen)
                 self.wordlist.append(chosen.getWord())
             else:
@@ -123,13 +117,14 @@ class WordSearch:
     def genWordSearch(self):
         width = 5
         height = 5
-        for i in range(len(self.ch)//width):
-            for x in range(len(self.ch[0])//height):
+        for x in range(len(self.ch[0])//height,-1,-1):
+            for i in range(len(self.ch)//width,-1,-1):
                 xPos = i*width
                 yPos = x*height
                 width2 = min(width, len(self.ch) - xPos)
                 height2 = min(height, len(self.ch[0])-yPos)
                 self.genPartialWordSearch(xPos, yPos, width2, height2)
+                print(self)
         #fill in the rest
         for i in range(len(self.ch)):
             for x in range(len(self.ch[0])):
