@@ -124,7 +124,6 @@ class WordSearch:
                 width2 = min(width, len(self.ch) - xPos)
                 height2 = min(height, len(self.ch[0])-yPos)
                 self.genPartialWordSearch(xPos, yPos, width2, height2)
-                print(self)
         #fill in the rest
         for i in range(len(self.ch)):
             for x in range(len(self.ch[0])):
