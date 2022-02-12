@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import *
-class Screen:
+class Screen:   
     def __init__(self):
         self.window = Tk()
         self.canvas = Canvas(width = 1000, height = 600, bg = "black")
@@ -26,7 +26,6 @@ class Screen:
         for x in range(376, 628, 36):
             self.alphabet.append([x,515,x+32,560])
         self.letters = "qwertyuiopasdfghjklzxcvbnm".upper()
-        ind = 0
         for i,v in enumerate(self.alphabet):
             self.canvas.create_rectangle(v[0], v[1], v[2], v[3], fill = "#848484")
             x = (v[0]+v[2])/2
@@ -54,6 +53,6 @@ class Screen:
         self.window.mainloop()   
     def letterMisplaced(self, pos):
         coords = self.alphabet[pos]
-        self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")             
+        self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")         
 screen = Screen()
 
