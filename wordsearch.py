@@ -117,13 +117,17 @@ class WordSearch:
     def genWordSearch(self):
         width = 5
         height = 5
-        for x in range(len(self.ch[0])//height,-1,-1):
-            for i in range(len(self.ch)//width,-1,-1):
+        positions = []
+        for x in range(len(self.ch[0])//height):
+            for i in range(len(self.ch)//width):
                 xPos = i*width
                 yPos = x*height
                 width2 = min(width, len(self.ch) - xPos)
                 height2 = min(height, len(self.ch[0])-yPos)
-                self.genPartialWordSearch(xPos, yPos, width2, height2)
+                positions.append([xPos, yPos, width2, height2])
+        random.shuffle(positions)
+        for i in positions:
+            self.genPartialWordSearch(i[0], i[1], i[2], i[3])
         #fill in the rest
         for i in range(len(self.ch)):
             for x in range(len(self.ch[0])):
