@@ -40,11 +40,13 @@ class WordleWord(FancyWord):
     def isMisplaced(self, pos):
         return super().colorAt(pos) == "yellow"
     def isNotUsed(self, pos):
-        return super().colorAt(pos) == "black"
+        return super().colorAt(pos) == "gray"
     def setCorrect(self, pos):
         super().setColorAt(pos, "green")
     def setMisplaced(self, pos):
         super().setColorAt(pos, "yellow")
     def setNotUsed(self, pos):
         super().setColorAt(pos, "gray")
+    def posOf(self, val):
+        return self.word.find(val)
     

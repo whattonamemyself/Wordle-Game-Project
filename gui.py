@@ -5,11 +5,14 @@ from wordbank import WordBank
 from wordleword import WordleWord
 from wordleplayer import WordlePlayer
 from game import markGuess
+#hello
 class Screen:   
     def __init__(self):
         self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz")
-        self.possible_words = WordBank("common5letter.txt")
-        self.word = self.possible_words.getRandom()
+        self.possible_words = WordBank("words_alpha.txt")
+        options = WordBank("common5letter.txt")
+        self.word = options.getRandom()
+        print(self.word)
         self.guess = 1
         self.window = Tk()
         self.canvas = Canvas(width = 1000, height = 600, bg = "black")
@@ -46,27 +49,41 @@ class Screen:
             self.canvas.create_text((x, y), text = self.letters[i], font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white")
         self.window.mainloop()
-    def squareCorrect(self, guess, pos):
+    def squareCorrect(self, guess, pos, char):
         coords = self.squares[guess][pos]
         self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#548c4c")
-        self.window.mainloop()
-    def letterCorrect(self, pos):
+        x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
+        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
+                                    fill = "white")
+    def letterCorrect(self, pos, char):
         coords = self.alphabet[pos]
         self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#548c4c")
-    def squareNotCorrect(self, guess, pos):
+        x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
+        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
+                                    fill = "white")
+    def squareNotCorrect(self, guess, pos, char):
         coords = self.squares[guess][pos]
         self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#3c3c3c")
-        self.window.mainloop()
-    def letterNotCorrect(self, pos):
+        x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
+        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
+                                    fill = "white")
+    def letterNotCorrect(self, pos, char):
         coords = self.alphabet[pos]
         self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#3c3c3c")
-    def squareMisplaced(self, guess, pos):
+        x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
+        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
+                                    fill = "white")
+    def squareMisplaced(self, guess, pos, char):
         coords = self.squares[guess][pos]
-        self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")
-        self.window.mainloop()   
-    def letterMisplaced(self, pos):
+        self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")  
+        x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
+        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
+                                    fill = "white")  
+    def letterMisplaced(self, pos, char):
         coords = self.alphabet[pos]
         self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")      
+        x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
+        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
     def displayCurrentWord(self):
         row = self.squares[self.guess-1]
         for i in range(5):
@@ -77,14 +94,27 @@ class Screen:
                 y = (box[1]+box[3])/2
                 self.canvas.create_text((x, y), text = self.current[i].upper(), font = ("DIN Condensed", 30, "bold"), fill = "white")
     def displayFinalWord(self):
-        row = self.squares[self.guess-1]
-        for i in range(5):
-            box = row[i]
-            self.canvas.create_rectangle(box[0], box[1], box[2], box[3], fill = "#141414", outline = "#3c3c3c") 
         modified = WordleWord(self.current)
         markGuess(self.word, modified, self.alpha)
         for i in range(5):
-            color = modified.colorAt(i)
+            if modified.isCorrect(i):
+                self.squareCorrect(self.guess-1, i, self.current[i].upper())
+                self.alpha.setCorrect(self.alpha.posOf(self.current[i]))
+            elif modified.isMisplaced(i):
+                self.squareMisplaced(self.guess-1, i, self.current[i].upper())
+                if not self.alpha.isCorrect(self.alpha.posOf(self.current[i])):
+                    self.alpha.setMisplaced(self.alpha.posOf(self.current[i]))
+            else:
+                self.squareNotCorrect(self.guess-1,i, self.current[i].upper())
+                if not self.alpha.isCorrect(self.alpha.posOf(self.current[i])) and not self.alpha.isCorrect(self.alpha.posOf(self.current[i])):
+                    self.alpha.setNotUsed(self.alpha.posOf(self.current[i]))
+        for i in range(len(self.alpha.word)):
+            if self.alpha.isCorrect(i):
+                self.letterCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
+            elif self.alpha.isMisplaced(i):
+                self.letterMisplaced(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
+            elif self.alpha.isNotUsed(i):
+                self.letterNotCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
     def keyPressed(self, event):
         if event.char in self.letters or event.char in self.letters.lower():
             if len(self.current) < 5:
@@ -97,8 +127,8 @@ class Screen:
     def enter(self, event):
         if len(self.current) == 5:
             if self.possible_words.contains(self.current):
-                self.guess += 1
                 self.displayFinalWord()
+                self.guess += 1
                 self.current = ""
 
 screen = Screen()
