@@ -40,6 +40,23 @@ class WSGUI():
         h = self.wordsearch.getHeight()
         return [x * 30 + 75, h * 30 - y * 30 + 50]
     
+    def manageGuesses(self):
+        if len(self.curGuess) >= 3:
+            tmp = self.canvas.create_rectangle(930,75,955,110, outline = "", fill = "#00cc42")
+            self.canvasItems.append(tmp)
+            tmp = self.canvas.create_rectangle(925,80,960,105, outline = "", fill = "#00cc42")
+            self.canvasItems.append(tmp)
+            tmp = self.canvas.create_oval(925,75,935,85, outline = "", fill = "#00cc42")
+            self.canvasItems.append(tmp)
+            tmp = self.canvas.create_oval(950,75,960,85, outline = "", fill = "#00cc42")
+            self.canvasItems.append(tmp)
+            tmp = self.canvas.create_oval(925,100,935,110, outline = "", fill = "#00cc42")
+            self.canvasItems.append(tmp)
+            tmp = self.canvas.create_oval(950,100,960,110, outline = "", fill = "#00cc42")
+            self.canvasItems.append(tmp)
+            text = self.canvas.create_text(928,79, anchor = tk.NW)
+            self.canvas.itemconfig(text, text="✔️",font = "Courier 30", fill = "#FFFFFF")
+            self.canvasItems.append(text)
     def update(self):
         for x in self.canvasItems:
             self.canvas.delete(x)
@@ -119,6 +136,8 @@ class WSGUI():
             self.canvasItems.append(text)
             tmp = self.canvas.create_line(575,110,575+22*len(self.curGuess),110,width = 2.718, fill = "#000000")
             self.canvasItems.append(tmp)
+
+        self.manageGuesses()
         self.mouseWasDown = self.inputs.isMouseDown()
         self.window.after(16, self.update)
 
