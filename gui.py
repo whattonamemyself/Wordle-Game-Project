@@ -84,8 +84,6 @@ class Screen:
         x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
         self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white") 
-    def winGame(self):
-        self.window.quit()
     def displayCurrentWord(self):
         row = self.squares[self.guess-1]
         for i in range(5):
@@ -117,8 +115,6 @@ class Screen:
                 self.letterMisplaced(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
             elif self.alpha.isNotUsed(i):
                 self.letterNotCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
-        if modified.isCorrect(0) and modified.isCorrect(1) and modified.isCorrect(2) and modified.isCorrect(3) and modified.isCorrect(4):
-            self.winGame()
     def keyPressed(self, event):
         if event.char in self.letters or event.char in self.letters.lower():
             if len(self.current) < 5:
