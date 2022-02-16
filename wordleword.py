@@ -31,6 +31,7 @@
 from fancyword import FancyWord
 
 # TODO - make WordleWord
+#hello
 
 class WordleWord(FancyWord):
     def __init__(self, w):
