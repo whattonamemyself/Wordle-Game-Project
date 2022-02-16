@@ -5,12 +5,14 @@ from wordbank import WordBank
 from wordleword import WordleWord
 from wordleplayer import WordlePlayer
 from game import markGuess
+from wordsearchgui import main
 class Screen:   
     def __init__(self):
         self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz")
         self.possible_words = WordBank("words_alpha.txt")
         options = WordBank("common5letter.txt")
         self.word = options.getRandom()
+        self.currDisplayOptions = False
         print(self.word)
         self.guess = 1
         self.window = Tk()
@@ -23,6 +25,8 @@ class Screen:
         heading.place(x = 500, y = 30, anchor = CENTER)
         heading2 = Label(self.window, text = "+", font = ("Arial", 35), fg = "white", bg = "black")
         heading2.place(x = 550, y = 30, anchor = CENTER)
+        options = Button(self.window, text = "Options", font = ("DIN Condensed", 20, "bold"), fg = "#427031", bg = "black", command = self.optionsDisplay)
+        options.place(x = 825, y = 30, anchor = CENTER)
         self.squares = []
         for y in range(115, 440, 55):
             square = []
@@ -130,5 +134,10 @@ class Screen:
                 self.displayFinalWord()
                 self.guess += 1
                 self.current = ""
-
+    def optionsDisplay(self):
+        self.wordsearch = Button(self.window, text = "Word Search", font = ("DIN Condensed", 10, "bold"), fg = "#427031", bg = "black", command = self.displayWordSearch)
+        self.wordsearch.place(x = 825, y = 50, anchor = CENTER)
+    def displayWordSearch(self):
+        self.window.destroy()
+        main()
 screen = Screen()
