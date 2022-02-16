@@ -137,9 +137,9 @@ class WordSearch:
         self.target = random.choice(self.wordlist)
         return self.target
     #returns the string of text
-    def getWord(self, x, y, dir, len):
+    def getWord(self, x, y, dir, len2):
         res = ""
-        for i in range(len):
+        for i in range(len2):
             if x < 0 or y < 0 or x >= len(self.ch) or y >= len(self.ch[0]): #out of bounds
                 continue
             res += self.ch[x][y]

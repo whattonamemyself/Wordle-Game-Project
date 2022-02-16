@@ -6,7 +6,7 @@ from inputwrapper import InputWrapper
 window = Tk()
 canvas = Canvas(width = 800, height = 600)
 thing = [None] * 100
-uwu = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLmwqpdbkhao*OZQ0#MW&8%B@$"
+uwu = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'."
 inputs = InputWrapper(canvas)
 def uwus():
     global uwu
@@ -20,7 +20,7 @@ def uwus():
             txt.append(uwu2[(x)%len(uwu2)])
         txt.append('\n')
     txt2 = "".join(txt)
-    canvas.create_text(0,0,fill="darkblue",font=("Terminal",10),text=txt2,anchor=NW)
+    canvas.create_text(0,0,fill="darkblue",font=("Courier",10),text=txt2,anchor=NW)
     if not inputs.isMouseDown():
         uwu = uwu[1:]+uwu[:1]
     window.after(1, uwus)

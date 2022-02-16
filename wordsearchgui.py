@@ -1,7 +1,17 @@
 import tkinter as tk
 import wordsearch as ws
 from inputwrapper import InputWrapper
-
+from game import markGuess
+direction = [
+    (1,0),
+    (1,1),
+    (0,1),
+    (-1,1),
+    (-1,0),
+    (-1,-1),
+    (0,-1),
+    (1,-1)
+]
 class WSGUI():
     def __init__(self,ws,inputs,canvas, window):
         self.wordsearch = ws
@@ -13,6 +23,8 @@ class WSGUI():
         self.isDragging = False
         self.mouseWasDown = False
         self.canvasItems = []
+        self.curGuess = ""
+        self.curHL = None
         w = self.wordsearch.getWidth()
         h = self.wordsearch.getHeight()
         self.hoverPos = [0,0]
@@ -23,10 +35,11 @@ class WSGUI():
                 canvas.itemconfig(text, text=self.wordsearch.getGrid()[x][y],font = "Rubik 12 bold")
     def getPos(self, x, y):
         h = self.wordsearch.getHeight()
-        return [round((x - 50)/26), round((h * 26 - y + 24)/26)]
+        return [round((x - 75)/30), round((h * 30 - y + 50)/30)]
     def getPos2(self, x, y):
         h = self.wordsearch.getHeight()
-        return [x * 26 + 50, h * 26 - y * 26 + 24]
+        return [x * 30 + 75, h * 30 - y * 30 + 50]
+    
     def update(self):
         for x in self.canvasItems:
             self.canvas.delete(x)
@@ -45,16 +58,34 @@ class WSGUI():
         self.hoverPos[0] += (target[0] - self.hoverPos[0]) / speed
         self.hoverPos[1] += (target[1] - self.hoverPos[1]) / speed
 
+
         if self.isDragging:
+            self.curHL = None
+            self.curGuess = ""
             a = self.getPos2(self.mouseDownX, self.mouseDownY)
             b = self.hoverPos
-            tmp = self.canvas.create_line(a[0],a[1],b[0],b[1], width = 31, fill = "#696969")
+            tmp = self.canvas.create_line(a[0],a[1],b[0],b[1], width = 30, fill = "#696969")
             self.canvas.tag_lower(tmp)
             self.canvasItems.append(tmp)
             tmp = self.canvas.create_oval(a[0] - 15, a[1] - 15, a[0] + 15, a[1] + 15, fill = "#696969", outline = "")
             self.canvas.tag_lower(tmp)
             self.canvasItems.append(tmp)
-
+            c = mousePos2[0] - self.mouseDownX
+            d = mousePos2[1] - self.mouseDownY
+            if not (c == 0 and d == 0):
+                l = max(abs(c),abs(d))
+                e = [c/l,d/l]
+                dir = -1
+                for i, v in enumerate(direction):
+                    if e[0] == v[0] and e[1] == v[1]:
+                        dir = i
+                if dir != -1:
+                    self.curHL = [self.mouseDownX, self.mouseDownY, mousePos2[0], mousePos2[1]]
+                    self.curHL[:2] = self.getPos2(self.curHL[0], self.curHL[1])
+                    self.curHL[2:] = self.getPos2(self.curHL[2], self.curHL[3])
+                    self.curGuess = self.wordsearch.getWord(self.mouseDownX, self.mouseDownY, dir, l + 1)
+        
+        
         if self.inputs.isMouseDown() and (not self.mouseWasDown) and mousePos[0] >= 0 and mousePos[1] >= 0 and mousePos[0] < w and mousePos[1] < h:
             self.isDragging = True
             self.mouseDownX = mousePos[0]
@@ -69,6 +100,25 @@ class WSGUI():
             self.isDragging = False
             self.mouseDownX = -1
             self.mousedownY = -1
+
+
+        if not self.curHL == None and not self.isDragging:
+            tmp = self.canvas.create_line(self.curHL[0],self.curHL[1],self.curHL[2],self.curHL[3], width = 30, fill = "#69D420")
+            self.canvas.tag_lower(tmp)
+            self.canvasItems.append(tmp)
+            tmp = self.canvas.create_oval(self.curHL[0]-15,self.curHL[1]-15,self.curHL[0]+15,self.curHL[1]+15, fill = "#69D420", outline = "")
+            self.canvas.tag_lower(tmp)
+            self.canvasItems.append(tmp)
+            tmp = self.canvas.create_oval(self.curHL[2]-15,self.curHL[3]-15,self.curHL[2]+15,self.curHL[3]+15, fill = "#69D420", outline = "")
+            self.canvas.tag_lower(tmp)
+            self.canvasItems.append(tmp)
+
+        if len(self.curGuess):
+            text = self.canvas.create_text(575,75, anchor = tk.NW)
+            self.canvas.itemconfig(text, text=self.curGuess,font = "Courier 36")
+            self.canvasItems.append(text)
+            tmp = self.canvas.create_line(575,110,575+22*len(self.curGuess),110,width = 2.718, fill = "#000000")
+            self.canvasItems.append(tmp)
         self.mouseWasDown = self.inputs.isMouseDown()
         self.window.after(16, self.update)
 
