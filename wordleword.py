@@ -48,4 +48,5 @@ class WordleWord(FancyWord):
         super().setColorAt(pos, "yellow")
     def setNotUsed(self, pos):
         super().setColorAt(pos, "gray")
-    
+    def posOf(self, val):
+        return self.word.find(val)
