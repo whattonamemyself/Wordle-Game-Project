@@ -5,7 +5,6 @@ from wordbank import WordBank
 from wordleword import WordleWord
 from wordleplayer import WordlePlayer
 from game import markGuess
-#hello
 class Screen:   
     def __init__(self):
         self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz")
@@ -84,6 +83,7 @@ class Screen:
         self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")      
         x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
         self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
+                                    fill = "white") 
     def displayCurrentWord(self):
         row = self.squares[self.guess-1]
         for i in range(5):
