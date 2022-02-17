@@ -25,7 +25,7 @@ class Screen:
         heading.place(x = 500, y = 30, anchor = CENTER)
         heading2 = Label(self.window, text = "+", font = ("Arial", 35), fg = "white", bg = "black")
         heading2.place(x = 550, y = 30, anchor = CENTER)
-        options = Button(self.window, text = "Options", font = ("DIN Condensed", 20, "bold"), fg = "#427031", bg = "black", command = self.optionsDisplay)
+        options = Button(self.window, text = "Options", font = ("DIN Condensed", 20, "bold"), fg = "#427031", command = self.optionsDisplay)
         options.place(x = 825, y = 30, anchor = CENTER)
         self.squares = []
         for y in range(115, 440, 55):
