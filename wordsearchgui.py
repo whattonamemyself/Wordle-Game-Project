@@ -1,6 +1,7 @@
 import tkinter as tk
 import wordsearch as ws
 from inputwrapper import InputWrapper
+from wordleword import WordleWord
 from game import markGuess
 direction = [
     (1,0),
@@ -12,6 +13,39 @@ direction = [
     (0,-1),
     (1,-1)
 ]
+class WordDisplayer:
+    def __init__(self, wordleWord, pos):
+        self.wordleWord = wordleWord
+        self.p = pos
+        self.pos = [None] * len(wordleWord.getWord())
+        self.vel = [0] * len(wordleWord.getWord())
+        self.sz = [0] * len(wordleWord.getWord())
+        self.const = 20
+        self.tick = 0
+        for i in range(len(self.pos)):
+            self.pos[i] = [self.p[0] + ((len(self.pos) - 1) / 2) * self.const, pos[1]]
+    #assumes that the size of the input is the same as the size of the original word uwu
+    def setWordleWord(self, wordleword): 
+        uwu = wordleword
+        #self.wordleword = wordleword
+    def upd(self, canvas, canvasItems):
+        for i in range(len(self.pos)):
+            if self.tick > i:  
+                self.pos[i][0] += (self.p[0] + i * self.const - self.pos[i][0]) / 5
+                self.vel[i] += (36 - self.sz[i]) / 10
+                self.vel[i] *= 0.8
+                self.sz[i] += self.vel[i]
+            if self.tick - i > 40:
+                self.sz[i] = 36
+            if self.sz[i] <= 3:
+                continue
+            text = canvas.create_text(self.pos[i][0],self.pos[i][1], anchor = tk.NW)
+            if self.wordleWord.colorAt(i) == "normal":
+                canvas.itemconfig(text, text=self.wordleWord.charAt(i),font = "Courier " + str(int(self.sz[i])), fill = "gray")
+            else:
+                canvas.itemconfig(text, text=self.wordleWord.charAt(i),font = "Courier " + str(int(self.sz[i])), fill = self.wordleWord.colorAt(i))
+            canvasItems.append(text)
+        self.tick += 1
 class WSGUI():
     def __init__(self,ws,inputs,canvas, window):
         self.wordsearch = ws
@@ -24,7 +58,10 @@ class WSGUI():
         self.mouseWasDown = False
         self.canvasItems = []
         self.curGuess = ""
+        self.guesses = []
         self.curHL = None
+        self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz")
+        self.alphaDisplay = WordDisplayer(self.alpha, (66, 536))
         w = self.wordsearch.getWidth()
         h = self.wordsearch.getHeight()
         self.hoverPos = [0,0]
@@ -40,23 +77,37 @@ class WSGUI():
         h = self.wordsearch.getHeight()
         return [x * 30 + 75, h * 30 - y * 30 + 50]
     
+    def inside(self, x, y, x1, y1, x2, y2):
+        return x >= x1 and x <= x2 and y >= y1 and y <= y2
     def manageGuesses(self):
+        text = self.canvas.create_text(919,69, anchor = tk.NW)
+        self.canvas.itemconfig(text, text="☑",font = "Courier 80", fill = "white")
+        self.canvasItems.append(text)
         if len(self.curGuess) >= 3:
-            tmp = self.canvas.create_rectangle(930,75,955,110, outline = "", fill = "#00cc42")
+            tmp = self.canvas.create_rectangle(925,95,960,130, outline = "", fill = "#00cc42")
+            self.canvas.lower(tmp)
             self.canvasItems.append(tmp)
-            tmp = self.canvas.create_rectangle(925,80,960,105, outline = "", fill = "#00cc42")
+            
+            if self.inputs.isMouseDown() and not self.mouseWasDown:
+                if self.inside(self.inputs.getMouseX(), self.inputs.getMouseY(), 925, 95, 960, 130):
+                    print(self.inputs.getMouseX(), self.inputs.getMouseY())
+                    uwu = WordleWord(self.curGuess)
+                    markGuess(self.wordsearch.target, uwu, self.alpha)
+                    self.guesses.append(WordDisplayer(uwu, (575, len(self.guesses) * 35 + 230)))
+                    self.curGuess = ""
+                    self.curHL = None
+        else:
+            tmp = self.canvas.create_rectangle(925,95,960,130, outline = "", fill = "#696969")
+            self.canvas.lower(tmp)
             self.canvasItems.append(tmp)
-            tmp = self.canvas.create_oval(925,75,935,85, outline = "", fill = "#00cc42")
-            self.canvasItems.append(tmp)
-            tmp = self.canvas.create_oval(950,75,960,85, outline = "", fill = "#00cc42")
-            self.canvasItems.append(tmp)
-            tmp = self.canvas.create_oval(925,100,935,110, outline = "", fill = "#00cc42")
-            self.canvasItems.append(tmp)
-            tmp = self.canvas.create_oval(950,100,960,110, outline = "", fill = "#00cc42")
-            self.canvasItems.append(tmp)
-            text = self.canvas.create_text(928,79, anchor = tk.NW)
-            self.canvas.itemconfig(text, text="✔️",font = "Courier 30", fill = "#FFFFFF")
-            self.canvasItems.append(text)
+
+        text = self.canvas.create_text(575,180, anchor = tk.NW)
+        self.canvas.itemconfig(text, text="Guesses: ",font = "Courier 36")
+        self.canvasItems.append(text)
+        for guess in self.guesses:
+            guess.upd(self.canvas, self.canvasItems)
+        self.alphaDisplay.setWordleWord(self.alpha)
+        self.alphaDisplay.upd(self.canvas, self.canvasItems)
     def update(self):
         for x in self.canvasItems:
             self.canvas.delete(x)
@@ -91,17 +142,18 @@ class WSGUI():
             d = mousePos2[1] - self.mouseDownY
             if not (c == 0 and d == 0):
                 l = max(abs(c),abs(d))
-                e = [c/l,d/l]
-                dir = -1
-                for i, v in enumerate(direction):
-                    if e[0] == v[0] and e[1] == v[1]:
-                        dir = i
-                if dir != -1:
-                    self.curHL = [self.mouseDownX, self.mouseDownY, mousePos2[0], mousePos2[1]]
-                    self.curHL[:2] = self.getPos2(self.curHL[0], self.curHL[1])
-                    self.curHL[2:] = self.getPos2(self.curHL[2], self.curHL[3])
-                    self.curGuess = self.wordsearch.getWord(self.mouseDownX, self.mouseDownY, dir, l + 1)
-        
+                if l >= 2:
+                    e = [c/l,d/l]
+                    dir = -1
+                    for i, v in enumerate(direction):
+                        if e[0] == v[0] and e[1] == v[1]:
+                            dir = i
+                    if dir != -1:
+                        self.curHL = [self.mouseDownX, self.mouseDownY, mousePos2[0], mousePos2[1]]
+                        self.curHL[:2] = self.getPos2(self.curHL[0], self.curHL[1])
+                        self.curHL[2:] = self.getPos2(self.curHL[2], self.curHL[3])
+                        self.curGuess = self.wordsearch.getWord(self.mouseDownX, self.mouseDownY, dir, l + 1)
+            
         
         if self.inputs.isMouseDown() and (not self.mouseWasDown) and mousePos[0] >= 0 and mousePos[1] >= 0 and mousePos[0] < w and mousePos[1] < h:
             self.isDragging = True
@@ -131,11 +183,12 @@ class WSGUI():
             self.canvasItems.append(tmp)
 
         if len(self.curGuess):
-            text = self.canvas.create_text(575,75, anchor = tk.NW)
+            text = self.canvas.create_text(575,95, anchor = tk.NW)
             self.canvas.itemconfig(text, text=self.curGuess,font = "Courier 36")
             self.canvasItems.append(text)
-            tmp = self.canvas.create_line(575,110,575+22*len(self.curGuess),110,width = 2.718, fill = "#000000")
-            self.canvasItems.append(tmp)
+            #tmp = self.canvas.create_line(575,110,575+22*len(self.curGuess),110,width = 2.718, fill = "#000000")
+        tmp = self.canvas.create_line(575,130,900,130,width = 2.718, fill = "#000000")
+        self.canvasItems.append(tmp)
 
         self.manageGuesses()
         self.mouseWasDown = self.inputs.isMouseDown()
