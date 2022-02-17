@@ -10,7 +10,8 @@ from wordsearchgui import main
 window = Tk()
 canvas = Canvas(width = 1000, height = 600, bg = "black")
 class Screen:   
-    def __init__(self, canvas, window):
+    def __init__(self, canvas, window, isHard):
+        self.isHard = isHard
         self.window = window
         self.canvas = canvas
         self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz")
@@ -18,7 +19,10 @@ class Screen:
         options = WordBank("common5letter.txt")
         self.word = options.getRandom()
         self.currDisplayOptions = False
+        self.currSettingsOptions = False
         print(self.word)
+        self.requirements = [[], [], [], [], []]
+        self.somewhere = []
         self.guess = 1
         self.canvas.bind_all('<KeyPress>',self.keyPressed)
         self.canvas.bind_all("<BackSpace>",self.delete)
@@ -30,6 +34,8 @@ class Screen:
         heading2.place(x = 550, y = 30, anchor = CENTER)
         options = Button(self.window, text = "Options", font = ("DIN Condensed", 20, "bold"), fg = "#427031", highlightbackground = "black", command = self.optionsDisplay)
         options.place(x = 825, y = 30, anchor = CENTER)
+        settings = Button(self.window, text = "Settings", font = ("DIN Condensed", 20, "bold"), fg = "#427031", highlightbackground = "black", command = self.settingsDisplay)
+        settings.place(x = 175, y = 30, anchor = CENTER)
         self.squares = []
         for y in range(115, 440, 55):
             square = []
@@ -105,13 +111,20 @@ class Screen:
         markGuess(self.word, modified, self.alpha)
         for i in range(5):
             if modified.isCorrect(i):
+                for j in self.alpha.getWord():
+                    if j != modified.charAt(i):
+                        self.requirements[i].append(j)
                 self.squareCorrect(self.guess-1, i, self.current[i].upper())
                 self.alpha.setCorrect(self.alpha.posOf(self.current[i]))
             elif modified.isMisplaced(i):
+                self.requirements[i].append(modified.charAt(i))
+                self.somewhere.append(modified.charAt(i))
                 self.squareMisplaced(self.guess-1, i, self.current[i].upper())
                 if not self.alpha.isCorrect(self.alpha.posOf(self.current[i])):
                     self.alpha.setMisplaced(self.alpha.posOf(self.current[i]))
             else:
+                for j in range(5):
+                    self.requirements[j].append(modified.charAt(i))
                 self.squareNotCorrect(self.guess-1,i, self.current[i].upper())
                 if not self.alpha.isCorrect(self.alpha.posOf(self.current[i])) and not self.alpha.isCorrect(self.alpha.posOf(self.current[i])):
                     self.alpha.setNotUsed(self.alpha.posOf(self.current[i]))
@@ -123,6 +136,7 @@ class Screen:
             elif self.alpha.isNotUsed(i):
                 self.letterNotCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
     def keyPressed(self, event):
+        valid = False
         if event.char in self.letters or event.char in self.letters.lower():
             if len(self.current) < 5:
                 self.current += event.char.lower()
@@ -132,11 +146,23 @@ class Screen:
             self.current = self.current[:-1]
             self.displayCurrentWord()
     def enter(self, event):
+        valid = False
         if len(self.current) == 5:
             if self.possible_words.contains(self.current):
-                self.displayFinalWord()
-                self.guess += 1
-                self.current = ""
+                valid = True
+                if self.isHard:
+                    sw = self.somewhere[::]
+                    for i in range(len(self.current)):
+                        if self.current[i] in sw:
+                            sw.remove(self.current[i])
+                        if self.current[i] in self.requirements[i]:
+                            valid = False
+                    if sw != []:
+                        valid = False
+        if valid:
+            self.displayFinalWord()
+            self.guess += 1
+            self.current = ""
     def optionsDisplay(self):
         if not self.currDisplayOptions:
             self.buttons = []
@@ -148,7 +174,23 @@ class Screen:
             for i in self.buttons:
                 i.destroy()
             self.currDisplayOptions = False
+    def newGame(self, isHard):
+        self.window.destroy()
+        window = Tk()
+        canvas = Canvas(width = 1000, height = 600, bg = "black")
+        screen = Screen(canvas, window, isHard)
+    def settingsDisplay(self):
+        if not self.currSettingsOptions:
+            self.set = []
+            hardmode = Button(self.window, text = "Hard Mode", font = ("DIN Condensed", 10, "bold"), highlightbackground = "black", fg = "#427031", bg = "black", command = lambda: self.newGame(True))
+            hardmode.place(x = 175, y = 60, anchor = CENTER)
+            self.set.append(hardmode)
+            self.currSettingsOptions = True
+        else:
+            for i in self.set:
+                i.destroy()
+            self.currSettingsOptions = False
     def displayWordSearch(self):
         self.window.destroy()
         main()
-screen = Screen(canvas, window)
+screen = Screen(canvas, window, False)
