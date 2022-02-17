@@ -6,8 +6,13 @@ from wordleword import WordleWord
 from wordleplayer import WordlePlayer
 from game import markGuess
 from wordsearchgui import main
+
+window = Tk()
+canvas = Canvas(width = 1000, height = 600, bg = "black")
 class Screen:   
-    def __init__(self):
+    def __init__(self, canvas, window):
+        self.window = window
+        self.canvas = canvas
         self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz")
         self.possible_words = WordBank("words_alpha.txt")
         options = WordBank("common5letter.txt")
@@ -15,8 +20,6 @@ class Screen:
         self.currDisplayOptions = False
         print(self.word)
         self.guess = 1
-        self.window = Tk()
-        self.canvas = Canvas(width = 1000, height = 600, bg = "black")
         self.canvas.bind_all('<KeyPress>',self.keyPressed)
         self.canvas.bind_all("<BackSpace>",self.delete)
         self.canvas.bind_all("<Return>",self.enter)
@@ -140,4 +143,4 @@ class Screen:
     def displayWordSearch(self):
         self.window.destroy()
         main()
-screen = Screen()
+screen = Screen(canvas, window)
