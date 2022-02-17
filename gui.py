@@ -28,7 +28,7 @@ class Screen:
         heading.place(x = 500, y = 30, anchor = CENTER)
         heading2 = Label(self.window, text = "+", font = ("Arial", 35), fg = "white", bg = "black")
         heading2.place(x = 550, y = 30, anchor = CENTER)
-        options = Button(self.window, text = "Options", font = ("DIN Condensed", 20, "bold"), fg = "#427031", command = self.optionsDisplay)
+        options = Button(self.window, text = "Options", font = ("DIN Condensed", 20, "bold"), fg = "#427031", highlightbackground = "black", command = self.optionsDisplay)
         options.place(x = 825, y = 30, anchor = CENTER)
         self.squares = []
         for y in range(115, 440, 55):
@@ -138,8 +138,16 @@ class Screen:
                 self.guess += 1
                 self.current = ""
     def optionsDisplay(self):
-        self.wordsearch = Button(self.window, text = "Word Search", font = ("DIN Condensed", 10, "bold"), fg = "#427031", bg = "black", command = self.displayWordSearch)
-        self.wordsearch.place(x = 825, y = 50, anchor = CENTER)
+        if not self.currDisplayOptions:
+            self.buttons = []
+            wordsearch = Button(self.window, text = "Word Search", font = ("DIN Condensed", 10, "bold"), highlightbackground = "black", fg = "#427031", bg = "black", command = self.displayWordSearch)
+            wordsearch.place(x = 825, y = 60, anchor = CENTER)
+            self.buttons.append(wordsearch)
+            self.currDisplayOptions = True
+        else:
+            for i in self.buttons:
+                i.destroy()
+            self.currDisplayOptions = False
     def displayWordSearch(self):
         self.window.destroy()
         main()
