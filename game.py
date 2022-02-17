@@ -2,6 +2,7 @@
 Eric Hsu Shanker Ram
 Snapshot #1: Finished whole wordle game besides settings, + made a word search, hoping to merge the games in the future uwu
 Snapshot #2: A lot of gui updates & small changes to wordsearch, split the game into 2 modes: classic / word search, made separate guis for each mode uwu
+Snapshot #3: Gui of regular wordle done, almost finished wordsearch wordle, + settings and switching are WIP
 '''
 
 
