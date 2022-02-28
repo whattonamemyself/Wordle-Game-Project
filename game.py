@@ -49,7 +49,7 @@ def markGuess(word, guess, alphabet):
             guess.setNotUsed(i)
             if alphabet.colorAt(alphabet.getWord().index(v)):
                alphabet.setColorAt(alphabet.getWord().index(v), "blue")
-    return word == s
+    return word == s #aaDFAD
 
 #======
 # playRound(players, words, all_words, settings)
