@@ -19,10 +19,8 @@ class Screen:
         self.possible_words = WordBank("words_alpha.txt")
         options = WordBank("common5letter.txt")
         self.word = options.getRandom()
-        self.word = "start"
         self.currDisplayOptions = False
         self.currSettingsOptions = False
-        print(self.word)
         self.requirements = [[], [], [], [], []]
         self.correct = [0, 0, 0, 0, 0]
         self.somewhere = []
@@ -35,10 +33,6 @@ class Screen:
         heading.place(x = 500, y = 30, anchor = CENTER)
         heading2 = Label(self.window, text = "+", font = ("Arial", 35), fg = "white", bg = "black")
         heading2.place(x = 550, y = 30, anchor = CENTER)
-        options = Button(self.window, text = "Options", font = ("DIN Condensed", 20, "bold"), fg = "#427031", highlightbackground = "black", command = self.optionsDisplay)
-        options.place(x = 825, y = 30, anchor = CENTER)
-        settings = Button(self.window, text = "Settings", font = ("DIN Condensed", 20, "bold"), fg = "#427031", highlightbackground = "black", command = self.settingsDisplay)
-        settings.place(x = 175, y = 30, anchor = CENTER)
         self.squares = []
         for y in range(115, 440, 55):
             square = []
@@ -173,34 +167,4 @@ class Screen:
             self.displayFinalWord()
             self.guess += 1
             self.current = ""
-    def optionsDisplay(self):
-        if not self.currDisplayOptions:
-            self.buttons = []
-            wordsearch = Button(self.window, text = "Word Search", font = ("DIN Condensed", 10, "bold"), highlightbackground = "black", fg = "#427031", bg = "black", command = self.displayWordSearch)
-            wordsearch.place(x = 825, y = 60, anchor = CENTER)
-            self.buttons.append(wordsearch)
-            self.currDisplayOptions = True
-        else:
-            for i in self.buttons:
-                i.destroy()
-            self.currDisplayOptions = False
-    def newGame(self, isHard):
-        self.window.destroy()
-        window = Tk()
-        canvas = Canvas(width = 1000, height = 600, bg = "black")
-        screen = Screen(canvas, window, isHard)
-    def settingsDisplay(self):
-        if not self.currSettingsOptions:
-            self.set = []
-            hardmode = Button(self.window, text = "Hard Mode", font = ("DIN Condensed", 10, "bold"), highlightbackground = "black", fg = "#427031", bg = "black", command = lambda: self.newGame(True))
-            hardmode.place(x = 175, y = 60, anchor = CENTER)
-            self.set.append(hardmode)
-            self.currSettingsOptions = True
-        else:
-            for i in self.set:
-                i.destroy()
-            self.currSettingsOptions = False
-    def displayWordSearch(self):
-        self.window.destroy()
-        main()
 screen = Screen(canvas, window, False)
