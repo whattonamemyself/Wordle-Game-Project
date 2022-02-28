@@ -32,9 +32,9 @@ def markGuess(word, guess, alphabet):
             alphabet.setCorrect(alphabet.getWord().index(v))
     # Second iteration - mark misplaced words
     for i,v in enumerate(s):
-        if mark2[i]:
-            continue
         for i2, v2 in enumerate(word):
+            if mark2[i]:
+                continue
             if mark[i2]:
                 continue
             if v == v2:
@@ -64,6 +64,7 @@ def markGuess(word, guess, alphabet):
 def playRound(player, words, all_words, settings):
         alphabet = WordleWord("abcdefghijklmnopqrstuvwxyz")
         word = words.getRandom()
+        word = "apple"
         tmp = True
         cnt = 1
         guesses = []

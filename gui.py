@@ -19,7 +19,7 @@ class Screen:
         self.possible_words = WordBank("words_alpha.txt")
         options = WordBank("common5letter.txt")
         self.word = options.getRandom()
-        # self.word = "train"
+        self.word = "start"
         self.currDisplayOptions = False
         self.currSettingsOptions = False
         print(self.word)
