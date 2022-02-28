@@ -11,6 +11,7 @@ window = Tk()
 canvas = Canvas(width = 1000, height = 600, bg = "black")
 class Screen:   
     def __init__(self, canvas, window, isHard):
+        self.hasWon = False
         self.isHard = isHard
         self.window = window
         self.canvas = canvas
@@ -18,10 +19,12 @@ class Screen:
         self.possible_words = WordBank("words_alpha.txt")
         options = WordBank("common5letter.txt")
         self.word = options.getRandom()
+        # self.word = "train"
         self.currDisplayOptions = False
         self.currSettingsOptions = False
         print(self.word)
         self.requirements = [[], [], [], [], []]
+        self.correct = [0, 0, 0, 0, 0]
         self.somewhere = []
         self.guess = 1
         self.canvas.bind_all('<KeyPress>',self.keyPressed)
@@ -111,6 +114,7 @@ class Screen:
         markGuess(self.word, modified, self.alpha)
         for i in range(5):
             if modified.isCorrect(i):
+                self.correct[i] = modified.charAt(i)
                 for j in self.alpha.getWord():
                     if j != modified.charAt(i):
                         self.requirements[i].append(j)
@@ -124,20 +128,25 @@ class Screen:
                     self.alpha.setMisplaced(self.alpha.posOf(self.current[i]))
             else:
                 for j in range(5):
-                    self.requirements[j].append(modified.charAt(i))
+                    if modified.charAt(j) != self.correct[j]:
+                        if modified.charAt(j) not in self.somewhere:
+                            self.requirements[j].append(modified.charAt(i))
                 self.squareNotCorrect(self.guess-1,i, self.current[i].upper())
                 if not self.alpha.isCorrect(self.alpha.posOf(self.current[i])) and not self.alpha.isCorrect(self.alpha.posOf(self.current[i])):
                     self.alpha.setNotUsed(self.alpha.posOf(self.current[i]))
+        correctCount = 0
         for i in range(len(self.alpha.word)):
             if self.alpha.isCorrect(i):
+                correctCount += 1
                 self.letterCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
             elif self.alpha.isMisplaced(i):
                 self.letterMisplaced(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
             elif self.alpha.isNotUsed(i):
                 self.letterNotCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
+        self.hasWon = correctCount == 5
     def keyPressed(self, event):
         valid = False
-        if event.char in self.letters or event.char in self.letters.lower():
+        if event.char in self.letters or event.char in self.letters.lower() and not self.hasWon:
             if len(self.current) < 5:
                 self.current += event.char.lower()
                 self.displayCurrentWord()
@@ -153,10 +162,11 @@ class Screen:
                 if self.isHard:
                     sw = self.somewhere[::]
                     for i in range(len(self.current)):
-                        if self.current[i] in sw:
-                            sw.remove(self.current[i])
                         if self.current[i] in self.requirements[i]:
                             valid = False
+                        if self.current[i] in sw and self.current[i] not in self.requirements[i]:
+                            valid = True
+                            sw.remove(self.current[i])
                     if sw != []:
                         valid = False
         if valid:
