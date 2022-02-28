@@ -5,20 +5,15 @@ Snapshot #2: A lot of gui updates & small changes to wordsearch, split the game 
 Snapshot #3: Gui of regular wordle done, almost finished wordsearch wordle, + settings and switching are WIP
 '''
 
-
+from tkinter import *
 
 from setting import Setting
 from wordbank import WordBank
 from wordleword import WordleWord
 from wordleplayer import WordlePlayer
+from gui import Screen
 
-
-#======
 # markGuess - will "mark" the guess and the alphabet according to the word
-#   word - String of word to be guessed
-#   guess - WordleWord that have been guessed
-#   alphabet - WordleWord of the letters a-z that have been marked
-#======
 def markGuess(word, guess, alphabet):
     s = guess.getWord()
     mark = [False] * len(word) # is the character from target word used?
@@ -49,53 +44,27 @@ def markGuess(word, guess, alphabet):
             guess.setNotUsed(i)
             if alphabet.colorAt(alphabet.getWord().index(v)):
                alphabet.setColorAt(alphabet.getWord().index(v), "blue")
-    return word == s #aaDFAD34TUQ34GYU89WEUT89
+    return word == s 
 
-#======
-# playRound(players, words, all_words, settings)
-# Plays one round of Wordle. 
-# Returns nothing, but modifies the player statistics at end of round
-#
-#   players - List of WordlePlayers
-#   words - Wordbank of the common words to select from
-#   all_words - Wordbank of the legal words to guess
-#   settings - Settings of game
-#======
+# playRound - plays one round of Wordle. 
 def playRound(player, words, all_words, settings):
         alphabet = WordleWord("abcdefghijklmnopqrstuvwxyz")
         word = words.getRandom()
-        word = "apple"
-        tmp = True
-        cnt = 1
-        guesses = []
-        while tmp and cnt <= settings.getValue('maxguess'):
-            guess = input("Enter a 5-letter guess: ")
-            if guess == "quit": # quit
-                cnt = settings.getValue('maxguess')+1 # a little hack ;)
-                break
-            if not all_words.contains(guess) or len(guess) != 5: #invalid word
-                print("Enter a valid word")
-                continue
-            guess = WordleWord(guess)
-            tmp = markGuess(word, guess, alphabet)
-            guesses.append(guess)
-            print("\n")
-            for i,v in enumerate(guesses):
-                print(str(i+1)+": "+str(v))
-            print("\n"+str(alphabet)+"\n")
-            if not tmp:
-                cnt += 1
-        
-        if cnt == settings.getValue('maxguess')+1: # too many guesses
+        window = Tk()
+        canvas = Canvas(width = 1000, height = 600, bg = "black")
+
+        screen = Screen(canvas, window, False, word, 6)
+        print(screen.getGuess())
+        if screen.getGuess() == -1: # too many guesses
             print("Sorry, you couldn't find the correct word!")
             print("The word was: " + word)
             print("\n")
             player.updateStats(False, -1)
         else:
-            print(cnt)
+            print(screen.getGuess())
             print("Good job, you figured out the word")
             print("\n")
-            player.updateStats(True, cnt)
+            player.updateStats(True, screen.getGuess())
         player.displayStats()
 
 
