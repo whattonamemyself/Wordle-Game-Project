@@ -1,24 +1,18 @@
-import tkinter as tk
+
 from tkinter import *
-from setting import Setting
 from wordbank import WordBank
 from wordleword import WordleWord
-from wordleplayer import WordlePlayer
-from game import markGuess
-from wordsearchgui import main
 
-window = Tk()
-canvas = Canvas(width = 1000, height = 600, bg = "black")
 class Screen:   
-    def __init__(self, canvas, window, isHard):
+    def __init__(self, canvas, window, isHard, word, maxguess):
+        self.maxguess = maxguess
         self.hasWon = False
         self.isHard = isHard
         self.window = window
         self.canvas = canvas
         self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz")
         self.possible_words = WordBank("words_alpha.txt")
-        options = WordBank("common5letter.txt")
-        self.word = options.getRandom()
+        self.word = word
         self.currDisplayOptions = False
         self.currSettingsOptions = False
         self.requirements = [[], [], [], [], []]
@@ -104,6 +98,7 @@ class Screen:
                 y = (box[1]+box[3])/2
                 self.canvas.create_text((x, y), text = self.current[i].upper(), font = ("DIN Condensed", 30, "bold"), fill = "white")
     def displayFinalWord(self):
+        from game import markGuess
         modified = WordleWord(self.current)
         markGuess(self.word, modified, self.alpha)
         for i in range(5):
@@ -138,9 +133,13 @@ class Screen:
             elif self.alpha.isNotUsed(i):
                 self.letterNotCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
         self.hasWon = correctCount == 5
+        if self.hasWon:
+            self.gameOver()
+        elif self.guess >= self.maxguess:
+            self.guess = -1
+            self.gameOver()
     def keyPressed(self, event):
-        valid = False
-        if event.char in self.letters or event.char in self.letters.lower() and not self.hasWon:
+        if event.char in self.letters or event.char in self.letters.lower():
             if len(self.current) < 5:
                 self.current += event.char.lower()
                 self.displayCurrentWord()
@@ -167,4 +166,7 @@ class Screen:
             self.displayFinalWord()
             self.guess += 1
             self.current = ""
-screen = Screen(canvas, window, False)
+    def gameOver(self):
+        self.window.quit()
+    def getGuess(self):
+        return self.guess
