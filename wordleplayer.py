@@ -41,15 +41,19 @@ from player import Player
 # TODO - make WordlePlayer
 
 class WordlePlayer(Player):
-    def __init__(self, n):
+    def __init__(self, n, maxtries):
         super().__init__(n)
         self.won = 0
         self.games = 0
         self.streak = 0
         self.maxstreak = 0
-        self.tries = [0] * 6 # 6 being maximum tries
+        self.tries = [0] * maxtries 
     def updateStats(self, won, tries):
         if won:
+            if tries < 0:
+                return len(self.tries)
+            if tries > len(self.tries):
+                return len(self.tries)
             self.tries[tries - 1] += 1
             self.won += 1
             self.streak += 1
@@ -58,6 +62,8 @@ class WordlePlayer(Player):
             self.streak = 0
         self.games += 1
     def winPercentage(self):
+        if self.games == 0:
+            return 0
         return self.won / self.games * 100
     def gamesPlayed(self):
         return self.games
@@ -67,7 +73,7 @@ class WordlePlayer(Player):
         return self.maxstreak
     def displayStats(self):
         print("Games Played:", self.gamesPlayed())
-        print("Win %:", self.winPercentage())
+        print("Win %:", str(round(self.winPercentage()))+'%')
         print("Current Streak:",self.currentStreak())
         print("Max Streak:", self.maxStreak())
         print("Guess Distribution")
@@ -75,4 +81,20 @@ class WordlePlayer(Player):
         if peak == 0:
             peak = 1
         for i, v in enumerate(self.tries):
-            print(str(i+1)+": ", "#"*(v*20//peak + 1))
+            print(" ",str(i+1)+": ", "#"*(v*20//peak + 1),v)
+
+"""
+p = WordlePlayer("Mark", 6)
+p.updateStats(True, 3) 
+p.updateStats(True, 3) 
+p.updateStats(True, 4) 
+p.updateStats(False, 0) 
+p.updateStats(True, 5) 
+p.updateStats(True, 5) 
+p.updateStats(True, 3) 
+p.updateStats(True, 2) 
+p.updateStats(False, 20) 
+p.updateStats(True, 2) 
+p.updateStats(True, 3) 
+p.displayStats() 
+"""
