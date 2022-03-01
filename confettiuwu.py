@@ -53,7 +53,7 @@ class Confetti():
             self.ypos.append(600)
             #mask = random.randint(1,6) # a simple bitmask of the colors 
             #self.col.append(((mask%2)*255, (mask//2%2)*255, (mask//4%2)*255))
-            self.col.append((random.random()*200, random.random()*200, 255))
+            self.col.append((random.random()*155, random.random()*255, 255))
             if random.randint(0,1) == 0:
                 self.xpos.append(0)
                 self.xv.append(random.random()*15 + force * 10)
