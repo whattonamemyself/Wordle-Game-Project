@@ -97,7 +97,8 @@ class WSGUI():
                 if self.inside(self.inputs.getMouseX(), self.inputs.getMouseY(), 925, 95, 960, 130): # mouse clicked the check mark
                     if self.wordlist.contains(self.curGuess): #check if word in wordlist
                         uwu = WordleWord(self.curGuess) 
-                        correct = markGuess(self.wordsearch.target, uwu, self.alpha) #marks guess
+                        correct = self.wordsearch.target == self.curGuess
+                        markGuess(self.wordsearch.target, uwu, self.alpha) #marks guess
                         self.guesses.append(WordDisplayer(uwu, (575, len(self.guesses) * 35 + 230))) # renders guess
                         self.curGuess = ""
                         self.curHL = None
