@@ -2,6 +2,7 @@
 from tkinter import *
 from wordbank import WordBank
 from wordleword import WordleWord
+import time
 
 class Screen:   
     def __init__(self, canvas, window, isHard, word, maxguess):
@@ -98,7 +99,7 @@ class Screen:
                 y = (box[1]+box[3])/2
                 self.canvas.create_text((x, y), text = self.current[i].upper(), font = ("DIN Condensed", 30, "bold"), fill = "white")
     def displayFinalWord(self):
-        from game import markGuess
+        from markguess import markGuess
         modified = WordleWord(self.current)
         markGuess(self.word, modified, self.alpha)
         for i in range(5):
@@ -133,12 +134,12 @@ class Screen:
             elif self.alpha.isNotUsed(i):
                 self.letterNotCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
         self.hasWon = correctCount == 5
-        print(self.hasWon, self.guess, self.maxguess)
         if self.hasWon:
-            self.gameOver()
+            self.window.after(5000, self.gameOver, self.guess)
         elif self.guess >= self.maxguess:
             self.guess = -1
-            self.gameOver()
+            print(self.guess, "?")
+            self.window.after(5000, self.gameOver, self.guess)
     def keyPressed(self, event):
         if event.char in self.letters or event.char in self.letters.lower():
             if len(self.current) < 5:
@@ -167,7 +168,10 @@ class Screen:
             self.displayFinalWord()
             self.guess += 1
             self.current = ""
-    def gameOver(self):
+    def gameOver(self, guessNum):
+        print(guessNum)
         self.window.quit()
+        print(guessNum)
     def getGuess(self):
+
         return self.guess
