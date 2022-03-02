@@ -36,7 +36,7 @@ class Confetti():
         self.ypos = []
         self.yv = []
         self.xv = []
-        self.tick = 20
+        self.tick = 0
         self.delay = []
         self.ghost = []
         self.col = []
@@ -62,7 +62,7 @@ class Confetti():
     def update(self): #updates every frame
         for i in self.canvasitems:
             self.canvas.delete(i)
-        if self.tick > 20:
+        if self.tick > 0:
             for i in range(150):
                 if self.delay[i] < self.tick :
                     self.xpos[i] += self.xv[i]
