@@ -43,11 +43,12 @@ def markGuess(word, guess, alphabet):
     #Third iteration - mark the rest as unused
     for i,v in enumerate(s):
         if not mark2[i]:
-            guess.setNotUsed(i)
+            #guess.setNotUsed(i)
+            #guess.setColorAt(i, "blue")
             if not alphabet.isCorrect(alphabet.getWord().index(v)) and not alphabet.isMisplaced(alphabet.getWord().index(v)):
                 alphabet.setNotUsed(alphabet.getWord().index(v))
             #if alphabet.colorAt(alphabet.getWord().index(v)):
-            #   alphabet.setColorAt(alphabet.getWord().index(v), "blue")
+            #alphabet.setColorAt(alphabet.getWord().index(v), "blue")
     #return word == s 
 
 # playRound - plays one round of Wordle. 
@@ -77,7 +78,6 @@ def playRound(player, words, all_words, settings):
             won = guess.getWord() == word
             if not won:
                 cnt += 1
-        assert type(player) != type([])
         if cnt == settings.getValue('maxguess')+1: # too many guesses
             print("Sorry, you couldn't find the correct word!")
             print()
@@ -88,23 +88,7 @@ def playRound(player, words, all_words, settings):
             print("Good job, you figured out the word")
             print()
             player.updateStats(True, cnt)
-    else:
-        window = Tk()
-        canvas = Canvas(width = 1000, height = 600, bg = "black")
-
-        screen = Screen(canvas, window, False, word, 6)
-        print(screen.getGuess())
-        if screen.getGuess() == -1: # too many guesses
-            print("Sorry, you couldn't find the correct word!")
-            print("The word was: " + word)
-            print("\n")
-            player.updateStats(False, -1)
-        else:
-            print(screen.getGuess())
-            print("Good job, you figured out the word")
-            print("\n")
-            player.updateStats(True, screen.getGuess())
-    #player.displayStats()
+            
 
 
 def playWordle():
@@ -144,5 +128,10 @@ def main():
     else:
         actualgame()
 
+player = WordlePlayer("mark",6)
+player.updateStats(1,2)
+player.displayStats()
+player.updateStats(0,69)
+player.displayStats()
 if __name__ == "__main__":
     main()
