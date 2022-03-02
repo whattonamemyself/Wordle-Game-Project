@@ -133,6 +133,7 @@ class Screen:
             elif self.alpha.isNotUsed(i):
                 self.letterNotCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
         self.hasWon = correctCount == 5
+        print(self.hasWon, self.guess, self.maxguess)
         if self.hasWon:
             self.gameOver()
         elif self.guess >= self.maxguess:
