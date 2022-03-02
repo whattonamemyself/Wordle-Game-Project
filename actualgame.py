@@ -1,6 +1,6 @@
-from tkinter import *
 from wordbank import WordBank
 from gui import Screen
+from tkinter import *
 
 def actualgame():
     window = Tk()
