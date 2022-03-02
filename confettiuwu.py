@@ -26,10 +26,8 @@ def renderShape(canvas, canvasitems, numpoints, size, rot, xpos, ypos, ghost, co
     shape = canvas.create_polygon(points,outline = "", fill = col, width = 0)
     canvasitems.append(shape)
 class Confetti():
-    def __init__(self,canvas, window, inputs):
-        self.inputs = inputs
+    def __init__(self,canvas):
         self.canvas = canvas
-        self.window = window
         self.canvasitems = []
         self.shape = []
         self.size = []
@@ -38,7 +36,7 @@ class Confetti():
         self.ypos = []
         self.yv = []
         self.xv = []
-        self.tick = 0
+        self.tick = 20
         self.delay = []
         self.ghost = []
         self.col = []
@@ -62,29 +60,31 @@ class Confetti():
                 self.xv.append(random.random()*-15 + force * -10)
 
     def update(self): #updates every frame
-        if not self.inputs.isMouseDown():
-            for i in self.canvasitems:
-                self.canvas.delete(i)
-            if self.tick > 20:
-                for i in range(150):
-                    if self.delay[i] < self.tick :
-                        self.xpos[i] += self.xv[i]
-                        self.ypos[i] += self.yv[i]
-                        self.yv[i] += 1 #gravity
-                        self.xv[i] *= 0.95 #deceleration
-                        self.ghost[i] -= 10
-                        if self.ghost[i] > 0 and self.ypos[i] < 620:
-                            renderShape(self.canvas, self.canvasitems, self.shape[i] + 3, self.size[i], self.rot[i], self.xpos[i], self.ypos[i], self.ghost[i], self.col[i])
-            self.tick += 1
-        self.window.after(16, self.update)
+        for i in self.canvasitems:
+            self.canvas.delete(i)
+        if self.tick > 20:
+            for i in range(150):
+                if self.delay[i] < self.tick :
+                    self.xpos[i] += self.xv[i]
+                    self.ypos[i] += self.yv[i]
+                    self.yv[i] += 1 #gravity
+                    self.xv[i] *= 0.95 #deceleration
+                    self.ghost[i] -= 10
+                    if self.ghost[i] > 0 and self.ypos[i] < 620:
+                        renderShape(self.canvas, self.canvasitems, self.shape[i] + 3, self.size[i], self.rot[i], self.xpos[i], self.ypos[i], self.ghost[i], self.col[i])
+        self.tick += 1
 
 def main():
     window = tk.Tk()
     canvas = tk.Canvas(width = 1000, height = 600)
     canvas.pack()
     inputs = InputWrapper(canvas)
-    confetti = Confetti(canvas, window, inputs)
+    confetti = Confetti(canvas)
     confetti.update()
+    def loop():
+        confetti.update()
+        window.after(16, loop)
+    loop()
     window.mainloop()
 if __name__ == "__main__":
     main()

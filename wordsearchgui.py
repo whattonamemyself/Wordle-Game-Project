@@ -3,7 +3,8 @@ import wordsearch as ws
 from inputwrapper import InputWrapper
 from wordleword import WordleWord
 from wordbank import WordBank
-from game import markGuess
+from markguess import markGuess
+from confettiuwu import Confetti
 direction = [
     (1,0),
     (1,1),
@@ -66,6 +67,7 @@ class WSGUI():
         self.invalid = 0 # ghost effect of text "guess is invalid"
         self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz") #alphabet
         self.alphaDisplay = WordDisplayer(self.alpha, (66, 536))
+        self.confetti = None
         w = self.wordsearch.getWidth()
         h = self.wordsearch.getHeight()
         self.hoverPos = [0,0]
@@ -103,6 +105,7 @@ class WSGUI():
                         self.curGuess = ""
                         self.curHL = None
                         if correct == 1:
+                            self.confetti = Confetti(self.canvas)
                             pass # solved
                     else:
                         self.invalid = 800
@@ -213,6 +216,8 @@ class WSGUI():
         self.manageGuesses()
         self.mouseWasDown = self.inputs.isMouseDown()
         self.window.after(16, self.update)
+        if self.confetti != None:
+            self.confetti.update()
 
 def main():
     window = tk.Tk()
