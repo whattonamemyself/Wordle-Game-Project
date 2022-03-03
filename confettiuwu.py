@@ -16,9 +16,9 @@ def renderShape(canvas, canvasitems, numpoints, size, rot, xpos, ypos, ghost, co
     
     
     gh = min(ghost, 255)/255
-    r = round(col[0]*(gh) + 255 * (1-gh))
-    g = round(col[1]*(gh) + 255 * (1-gh))
-    b = round(col[2]*(gh) + 255 * (1-gh))
+    r = round(col[0]*(gh) + 0 * (1-gh))
+    g = round(col[1]*(gh) + 0 * (1-gh))
+    b = round(col[2]*(gh) + 0 * (1-gh))
     col = hex(r*256*256 + g*256 + b)[2:]
     while len(col) < 6:
         col = '0' + col

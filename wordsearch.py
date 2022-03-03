@@ -112,7 +112,7 @@ class WordSearch:
                 self.wordlist.append(chosen.getWord())
             else:
                 tries += 1
-                            
+        
     #generates the word search, returns target word
     def genWordSearch(self):
         width = 5

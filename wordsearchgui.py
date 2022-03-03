@@ -76,7 +76,7 @@ class WSGUI():
             for y in range(h):
                 p = self.getPos2(x, y)
                 text = canvas.create_text(p[0], p[1], anchor = tk.CENTER)
-                canvas.itemconfig(text, text=self.wordsearch.getGrid()[x][y],font = "Rubik 12 bold")
+                canvas.itemconfig(text, text=self.wordsearch.getGrid()[x][y],font = "Rubik 12 bold", fill = "black")
     def getPos(self, x, y):
         h = self.wordsearch.getHeight()
         return [round((x - 75)/30), round((h * 30 - y + 50)/30)]
@@ -86,20 +86,21 @@ class WSGUI():
     
     def inside(self, x, y, x1, y1, x2, y2):
         return x >= x1 and x <= x2 and y >= y1 and y <= y2
-    def renderHL(self, hl):
-            tmp = self.canvas.create_line(hl[0],hl[1],hl[2],hl[3], width = 30, fill = "#69D420")
+
+    def renderHL(self, hl, col = "#69D420"):
+            tmp = self.canvas.create_line(hl[0],hl[1],hl[2],hl[3], width = 30, fill = col)
             self.canvas.lower(tmp)
             self.canvasItems.append(tmp)
-            tmp = self.canvas.create_oval(hl[0]-15,hl[1]-15,hl[0]+15,hl[1]+15, fill = "#69D420", outline = "")
+            tmp = self.canvas.create_oval(hl[0]-15,hl[1]-15,hl[0]+15,hl[1]+15, fill = col, outline = "")
             self.canvas.lower(tmp)
             self.canvasItems.append(tmp)
-            tmp = self.canvas.create_oval(hl[2]-15,hl[3]-15,hl[2]+15,hl[3]+15, fill = "#69D420", outline = "")
+            tmp = self.canvas.create_oval(hl[2]-15,hl[3]-15,hl[2]+15,hl[3]+15, fill = col, outline = "")
             self.canvas.lower(tmp)
             self.canvasItems.append(tmp)
 
     def manageGuesses(self): # deals with the guesses
         text = self.canvas.create_text(919,69, anchor = tk.NW)
-        self.canvas.itemconfig(text, text="☑",font = "Courier 80", fill = "white") #renders checkmark
+        self.canvas.itemconfig(text, text="☑",font = "Courier 80", fill = "black") #renders checkmark
         self.canvasItems.append(text)
         if len(self.curGuess) >= 3: # yes current guess
             tmp = self.canvas.create_rectangle(925,95,960,130, outline = "", fill = "#00cc42")
@@ -119,6 +120,9 @@ class WSGUI():
                         if correct == 1: # word is correct
                             self.confetti.__init__(self.canvas, self.window)
                             self.window.after(0,self.confetti.update)
+                            pass #TODO - return win + guesses | return len(self.guesses) | stop
+                        elif len(self.guesses) == 6:
+                            pass #TODO - return lose | return 7 | stop
                     else:
                         self.invalid = 800 #displays message saying word is invalid
         else: # no current guess
@@ -128,18 +132,23 @@ class WSGUI():
 
         if self.invalid > 0: #renders the red text telling you that you didnt enter a valid word
             text = self.canvas.create_text(575,140, anchor = tk.NW)
-            gb = 255-min(self.invalid, 255) # green and blue values
-            col = '#' + hex(255*256*256 + gb*256 + gb)[2:]
+            gb = min(self.invalid, 255) # green and blue values
+            col = hex(gb*256*256 + 0*256 + 0)[2:]
+            while len(col)<6:
+                col = '0' + col
+            col = '#' + col
             self.canvas.itemconfig(text, text="Uh oh, it seems like your word DOESNT EXIST IDIOT",font = "Courier 14", fill = col) #renders checkmark
             self.canvasItems.append(text)
             self.invalid -= 8
-
         
+        #render previous guesses
         text = self.canvas.create_text(575,190, anchor = tk.NW)
-        self.canvas.itemconfig(text, text="Guesses: ",font = "Courier 36")
+        self.canvas.itemconfig(text, text="Guesses: ",font = "Courier 36", fill = "white")
         self.canvasItems.append(text)
         for guess in self.guesses:
             guess.upd(self.canvas, self.canvasItems)
+        for guess in self.guesshl:
+            self.renderHL(guess, "#69F6F9")
         self.alphaDisplay.setWordleWord(self.alpha)
         self.alphaDisplay.upd(self.canvas, self.canvasItems)
 
@@ -167,12 +176,7 @@ class WSGUI():
             self.curGuess = ""
             a = self.getPos2(self.mouseDownX, self.mouseDownY)
             b = self.hoverPos
-            tmp = self.canvas.create_line(a[0],a[1],b[0],b[1], width = 30, fill = "#696969")
-            self.canvas.lower(tmp)
-            self.canvasItems.append(tmp)
-            tmp = self.canvas.create_oval(a[0] - 15, a[1] - 15, a[0] + 15, a[1] + 15, fill = "#696969", outline = "")
-            self.canvas.lower(tmp)
-            self.canvasItems.append(tmp)
+            self.renderHL(a+b, col="#696969")
             c = mousePos2[0] - self.mouseDownX
             d = mousePos2[1] - self.mouseDownY
             if not (c == 0 and d == 0):
@@ -211,10 +215,10 @@ class WSGUI():
 
         if len(self.curGuess): #displays current text
             text = self.canvas.create_text(575,95, anchor = tk.NW)
-            self.canvas.itemconfig(text, text=self.curGuess,font = "Courier 36")
+            self.canvas.itemconfig(text, text=self.curGuess,font = "Courier 36", fill = "white")
             self.canvasItems.append(text)
 
-        tmp = self.canvas.create_line(575,130,900,130,width = 2.718, fill = "#000000")
+        tmp = self.canvas.create_line(575,130,900,130,width = 2.718, fill = "#FFFFFF")
         self.canvasItems.append(tmp)
 
         self.manageGuesses()
@@ -223,7 +227,7 @@ class WSGUI():
 
 def main():
     window = tk.Tk()
-    canvas = tk.Canvas(width = 1000, height = 600)
+    canvas = tk.Canvas(width = 1000, height = 600, bg = "black")
     canvas.pack()
     inputs = InputWrapper(canvas)
     wordsearch = ws.WordSearch(15,15)
