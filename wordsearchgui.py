@@ -48,6 +48,7 @@ class WordDisplayer:
                 canvas.itemconfig(text, text=self.wordleWord.charAt(i),font = "Courier " + str(int(self.sz[i])), fill = self.wordleWord.colorAt(i))
             canvasItems.append(text)
         self.tick += 1
+
 class WSGUI():
     def __init__(self,ws,inputs,canvas, window):
         self.wordsearch = ws
@@ -85,6 +86,16 @@ class WSGUI():
     
     def inside(self, x, y, x1, y1, x2, y2):
         return x >= x1 and x <= x2 and y >= y1 and y <= y2
+    def renderHL(self, hl):
+            tmp = self.canvas.create_line(hl[0],hl[1],hl[2],hl[3], width = 30, fill = "#69D420")
+            self.canvas.lower(tmp)
+            self.canvasItems.append(tmp)
+            tmp = self.canvas.create_oval(hl[0]-15,hl[1]-15,hl[0]+15,hl[1]+15, fill = "#69D420", outline = "")
+            self.canvas.lower(tmp)
+            self.canvasItems.append(tmp)
+            tmp = self.canvas.create_oval(hl[2]-15,hl[3]-15,hl[2]+15,hl[3]+15, fill = "#69D420", outline = "")
+            self.canvas.lower(tmp)
+            self.canvasItems.append(tmp)
 
     def manageGuesses(self): # deals with the guesses
         text = self.canvas.create_text(919,69, anchor = tk.NW)
@@ -96,20 +107,20 @@ class WSGUI():
             self.canvasItems.append(tmp)
             
             if self.inputs.isMouseDown() and not self.mouseWasDown: 
-                if self.inside(self.inputs.getMouseX(), self.inputs.getMouseY(), 925, 95, 960, 130): # mouse clicked the check mark
-                    if self.wordlist.contains(self.curGuess): #check if word in wordlist
+                if self.inside(self.inputs.getMouseX(), self.inputs.getMouseY(), 925, 95, 960, 130): # button pressed!
+                    if self.wordlist.contains(self.curGuess): #word is a valid word
                         uwu = WordleWord(self.curGuess) 
                         correct = self.wordsearch.target == self.curGuess
-                        markGuess(self.wordsearch.target, uwu, self.alpha) #marks guess
-                        self.guesses.append(WordDisplayer(uwu, (575, len(self.guesses) * 35 + 230))) # renders guess
+                        markGuess(self.wordsearch.target, uwu, self.alpha) 
+                        self.guesses.append(WordDisplayer(uwu, (575, len(self.guesses) * 35 + 230))) 
                         self.curGuess = ""
+                        self.guesshl.append(self.curHL)
                         self.curHL = None
-                        if correct == 1:
+                        if correct == 1: # word is correct
                             self.confetti.__init__(self.canvas, self.window)
                             self.window.after(0,self.confetti.update)
-                            pass # solved
                     else:
-                        self.invalid = 800
+                        self.invalid = 800 #displays message saying word is invalid
         else: # no current guess
             tmp = self.canvas.create_rectangle(925,95,960,130, outline = "", fill = "#696969") 
             self.canvas.lower(tmp)
@@ -157,10 +168,10 @@ class WSGUI():
             a = self.getPos2(self.mouseDownX, self.mouseDownY)
             b = self.hoverPos
             tmp = self.canvas.create_line(a[0],a[1],b[0],b[1], width = 30, fill = "#696969")
-            self.canvas.tag_lower(tmp)
+            self.canvas.lower(tmp)
             self.canvasItems.append(tmp)
             tmp = self.canvas.create_oval(a[0] - 15, a[1] - 15, a[0] + 15, a[1] + 15, fill = "#696969", outline = "")
-            self.canvas.tag_lower(tmp)
+            self.canvas.lower(tmp)
             self.canvasItems.append(tmp)
             c = mousePos2[0] - self.mouseDownX
             d = mousePos2[1] - self.mouseDownY
@@ -179,32 +190,24 @@ class WSGUI():
                         self.curGuess = self.wordsearch.getWord(self.mouseDownX, self.mouseDownY, dir, l + 1)
             
         
-        if self.inputs.isMouseDown() and (not self.mouseWasDown) and mousePos[0] >= 0 and mousePos[1] >= 0 and mousePos[0] < w and mousePos[1] < h:
+        if self.inputs.isMouseDown() and (not self.mouseWasDown) and mousePos[0] >= 0 and mousePos[1] >= 0 and mousePos[0] < w and mousePos[1] < h: 
             self.isDragging = True
             self.mouseDownX = mousePos[0]
             self.mouseDownY = mousePos[1]
             
-        if self.isDragging or ((not self.inputs.isMouseDown()) and mousePos[0] >= 0 and mousePos[1] >= 0 and mousePos[0] < w and mousePos[1] < h):
+        if self.isDragging or ((not self.inputs.isMouseDown()) and mousePos[0] >= 0 and mousePos[1] >= 0 and mousePos[0] < w and mousePos[1] < h): #highlight is on
             tmp = self.canvas.create_oval(self.hoverPos[0] - 15, self.hoverPos[1] - 15, self.hoverPos[0] + 15, self.hoverPos[1] + 15, fill = "#696969", outline = "")
             self.canvas.tag_lower(tmp)
             self.canvasItems.append(tmp)
         
-        if not self.inputs.isMouseDown():
+        if not self.inputs.isMouseDown(): #not dragging
             self.isDragging = False
             self.mouseDownX = -1
             self.mousedownY = -1
 
 
-        if not self.curHL == None and not self.isDragging: #renders gray marker
-            tmp = self.canvas.create_line(self.curHL[0],self.curHL[1],self.curHL[2],self.curHL[3], width = 30, fill = "#69D420")
-            self.canvas.tag_lower(tmp)
-            self.canvasItems.append(tmp)
-            tmp = self.canvas.create_oval(self.curHL[0]-15,self.curHL[1]-15,self.curHL[0]+15,self.curHL[1]+15, fill = "#69D420", outline = "")
-            self.canvas.tag_lower(tmp)
-            self.canvasItems.append(tmp)
-            tmp = self.canvas.create_oval(self.curHL[2]-15,self.curHL[3]-15,self.curHL[2]+15,self.curHL[3]+15, fill = "#69D420", outline = "")
-            self.canvas.tag_lower(tmp)
-            self.canvasItems.append(tmp)
+        if not self.curHL == None and not self.isDragging:
+            self.renderHL(self.curHL)
 
         if len(self.curGuess): #displays current text
             text = self.canvas.create_text(575,95, anchor = tk.NW)
