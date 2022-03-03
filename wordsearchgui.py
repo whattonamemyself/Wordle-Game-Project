@@ -67,7 +67,7 @@ class WSGUI():
         self.invalid = 0 # ghost effect of text "guess is invalid"
         self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz") #alphabet
         self.alphaDisplay = WordDisplayer(self.alpha, (66, 536))
-        self.confetti = None
+        self.confetti = Confetti(self.canvas, self.window)
         w = self.wordsearch.getWidth()
         h = self.wordsearch.getHeight()
         self.hoverPos = [0,0]
@@ -105,7 +105,8 @@ class WSGUI():
                         self.curGuess = ""
                         self.curHL = None
                         if correct == 1:
-                            self.confetti = Confetti(self.canvas)
+                            self.confetti.__init__(self.canvas, self.window)
+                            self.window.after(0,self.confetti.update)
                             pass # solved
                     else:
                         self.invalid = 800
@@ -216,8 +217,6 @@ class WSGUI():
         self.manageGuesses()
         self.mouseWasDown = self.inputs.isMouseDown()
         self.window.after(16, self.update)
-        if self.confetti != None:
-            self.confetti.update()
 
 def main():
     window = tk.Tk()
