@@ -26,8 +26,9 @@ def renderShape(canvas, canvasitems, numpoints, size, rot, xpos, ypos, ghost, co
     shape = canvas.create_polygon(points,outline = "", fill = col, width = 0)
     canvasitems.append(shape)
 class Confetti():
-    def __init__(self,canvas):
+    def __init__(self,canvas, window):
         self.canvas = canvas
+        self.window = window
         self.canvasitems = []
         self.shape = []
         self.size = []
@@ -73,6 +74,8 @@ class Confetti():
                     if self.ghost[i] > 0 and self.ypos[i] < 620:
                         renderShape(self.canvas, self.canvasitems, self.shape[i] + 3, self.size[i], self.rot[i], self.xpos[i], self.ypos[i], self.ghost[i], self.col[i])
         self.tick += 1
+        if self.tick < 500:
+            self.window.after(16, self.update)
 
 def main():
     window = tk.Tk()
@@ -81,10 +84,6 @@ def main():
     inputs = InputWrapper(canvas)
     confetti = Confetti(canvas)
     confetti.update()
-    def loop():
-        confetti.update()
-        window.after(16, loop)
-    loop()
     window.mainloop()
 if __name__ == "__main__":
     main()
