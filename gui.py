@@ -52,7 +52,6 @@ class Screen:
             y = (v[1]+v[3])/2
             self.canvas.create_text((x, y), text = self.letters[i], font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white")
-        self.window.mainloop()
     def squareCorrect(self, guess, pos, char):
         coords = self.squares[guess][pos]
         self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#548c4c")
