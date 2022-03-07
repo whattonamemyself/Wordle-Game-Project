@@ -74,8 +74,11 @@ class Confetti():
                     if self.ghost[i] > 0 and self.ypos[i] < 620:
                         renderShape(self.canvas, self.canvasitems, self.shape[i] + 3, self.size[i], self.rot[i], self.xpos[i], self.ypos[i], self.ghost[i], self.col[i])
         self.tick += 1
-        if self.tick < 500:
+        if self.tick < 80:
             self.window.after(16, self.update)
+        else:
+            for i in self.canvasitems:
+                self.canvas.delete(i)
 
 def main():
     window = tk.Tk()

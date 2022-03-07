@@ -82,6 +82,14 @@ class WordlePlayer(Player):
             peak = 1
         for i, v in enumerate(self.tries):
             print(" ",str(i+1)+": ", "#"*(v*20//peak + 1),v)
+    def getTries(self):
+        peak = max(self.tries)
+        if peak == 0:
+            peak = 1
+        res = []
+        for i, v in enumerate(self.tries):
+            res.append(v*100//peak + 1)
+        return res
 
 """
 p = WordlePlayer("Mark", 6)
