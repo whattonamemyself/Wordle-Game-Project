@@ -14,6 +14,7 @@ def __init__(self, n, maxtries):
 class StatsDisplayer:
     def __init__(self, canvas, window, inputs, name, maxtries = 6): #tk.canvas, tk.window, string, int
         self.canvas = canvas
+        self.maxtries = maxtries
         self.canvasitems = []
         self.window = window
         self.inputs = inputs
@@ -21,24 +22,35 @@ class StatsDisplayer:
         self.wordlesearch = WordlePlayer(name, maxtries)
         self.button = Button(inputs, window, self.open, 800,50,900,150)
         self.closebutton = None
+        self.mode = 0
         self.bg = None
         self.tick = None
         self.active = False
         self.canvas.create_rectangle(800,50,900,150,fill="red")
-
+    def setModeWordle(self):
+        self.mode = 0
+    def setModeWordleSearch(self):
+        self.mode = 1
+    def updateStats(self, win, tries):
+        if self.mode == 0:
+            self.wordleplayer.updateStats(win, tries)
+        else:
+            self.wordlesearch.updateStats(win, tries)
     def roundrect(self, x1, y1, x2, y2, col = "red", rad=20):
-        self.canvasitems.append(self.canvas.create_rectangle(x1+rad, y1, x2-rad, y2, fill=col, outline = ""))
-        self.canvasitems.append(self.canvas.create_rectangle(x1, y1+rad, x2, y2-rad, fill=col, outline = ""))
-        self.canvasitems.append(self.canvas.create_oval(x1, y1, x1+rad*2, y1+rad*2, fill=col, outline = ""))
-        self.canvasitems.append(self.canvas.create_oval(x1, y2-rad*2, x1+rad*2, y2, fill=col, outline = ""))
-        self.canvasitems.append(self.canvas.create_oval(x2-rad*2, y1, x2, y1+rad*2, fill=col, outline = ""))
-        self.canvasitems.append(self.canvas.create_oval(x2-rad*2, y2-rad*2, x2, y2, fill=col, outline = ""))
+        res = []
+        res.append(self.canvas.create_rectangle(x1+rad, y1, x2-rad, y2, fill=col, outline = ""))
+        res.append(self.canvas.create_rectangle(x1, y1+rad, x2, y2-rad, fill=col, outline = ""))
+        res.append(self.canvas.create_oval(x1, y1, x1+rad*2, y1+rad*2, fill=col, outline = ""))
+        res.append(self.canvas.create_oval(x1, y2-rad*2, x1+rad*2, y2, fill=col, outline = ""))
+        res.append(self.canvas.create_oval(x2-rad*2, y1, x2, y1+rad*2, fill=col, outline = ""))
+        res.append(self.canvas.create_oval(x2-rad*2, y2-rad*2, x2, y2, fill=col, outline = ""))
+        return res
     def open(self):
-        self.closebutton = Button(self.inputs, self.window, self.close, 100,50,200,150)
-        text = self.canvas.create_text(650,100, anchor = tk.NW)
-        self.canvas.itemconfig(text, text="x",font = "Courier 80", fill = "black")
+        self.closebutton = Button(self.inputs, self.window, self.close, 640,110,690,160)
 
         self.bg = [300,100,700,500]
+        self.bars = [0] * self.maxtries
+
         self.tick = 0
         self.active = True
         self.loop()
@@ -52,12 +64,57 @@ class StatsDisplayer:
             self.canvas.delete(item)
 
     def loop(self):
-        if self.active:
-            for item in self.canvasitems:
-                self.canvas.delete(item)
-            self.roundrect(self.bg[0],self.bg[1],self.bg[2],self.bg[3],col="red")
-            self.tick += 1
-            self.window.after(16, self.loop)
+        if not self.active:
+            return
+        for item in self.canvasitems:
+            self.canvas.delete(item)
+        bg = self.roundrect(self.bg[0],self.bg[1],self.bg[2],self.bg[3],col="#696969")
+        for i in range(len(bg)):
+            self.canvasitems.append(bg[i])
+
+        #x button
+        text = self.canvas.create_text(640,90, anchor = tk.NW)           
+        self.canvas.itemconfig(text, text="x",font = ("Courier", 80, "bold"), fill = "black")
+        self.canvasitems.append(text)
+
+        #display stats
+        if self.mode == 0:
+            stats = self.wordleplayer
+        else:
+            stats = self.wordlesearch
+        #text
+        text = self.canvas.create_text(350,120, anchor = tk.NW)           
+        self.canvas.itemconfig(text, text="Games Played: "+str(stats.gamesPlayed()),font = ("DIN Condensed", 20, "bold"), fill = "black")
+        self.canvasitems.append(text)
+        text = self.canvas.create_text(350,140, anchor = tk.NW)           
+        self.canvas.itemconfig(text, text="Win %: "+ str(round(stats.winPercentage()))+'%',font = ("DIN Condensed", 20, "bold"), fill = "black")
+        self.canvasitems.append(text)
+        text = self.canvas.create_text(350,160, anchor = tk.NW)           
+        self.canvas.itemconfig(text, text="Current Streak: "+str(stats.currentStreak()),font = ("DIN Condensed", 20, "bold"), fill = "black")
+        self.canvasitems.append(text)
+        text = self.canvas.create_text(350,180, anchor = tk.NW)           
+        self.canvas.itemconfig(text, text="Max Streak: "+str(stats.maxStreak()),font = ("DIN Condensed", 20, "bold"), fill = "black")
+        self.canvasitems.append(text)
+        text = self.canvas.create_text(350,200, anchor = tk.NW)           
+        self.canvas.itemconfig(text, text="Guess Distribution",font = ("DIN Condensed", 20, "bold"), fill = "black")
+        self.canvasitems.append(text)
+        #bars
+        tries = stats.getTries()
+        for i in range(self.maxtries):
+            self.bars[i] += (tries[i] - self.bars[i])/5
+            bar = self.canvas.create_rectangle(350, i*40 + 245 , 350 + self.bars[i]*3, i*40 + 270, outline = "", fill = "green")
+            self.canvasitems.append(bar)
+
+            self.bars[i] += (tries[i] - self.bars[i])/5
+            bar = self.canvas.create_rectangle(350, i*40 + 245 , 350 + self.bars[i]*3, i*40 + 270, outline = "", fill = "green")
+            self.canvasitems.append(bar)
+
+            text = self.canvas.create_text(330,i*40+240, anchor = tk.NW)           
+            self.canvas.itemconfig(text, text=str(i),font = ("DIN Condensed", 20, "bold"), fill = "black")
+            self.canvasitems.append(text)
+
+        self.tick += 1
+        self.window.after(16, self.loop)
 
 def main():
     window = tk.Tk()
@@ -65,6 +122,10 @@ def main():
     canvas.pack()
     inputs = InputWrapper(canvas)
     stats = StatsDisplayer(canvas, window, inputs, "mark", 6)
+    stats.updateStats(1,1)
+    stats.updateStats(1,2)
+    stats.updateStats(1,2)
+    stats.updateStats(1,3)
     window.mainloop()
 if __name__ == "__main__":
     main()
