@@ -21,14 +21,15 @@ class Screen:
         self.correct = [0, 0, 0, 0, 0]
         self.somewhere = []
         self.guess = 1
+        self.inMode = False
         self.canvas.bind_all('<KeyPress>',self.keyPressed)
         self.canvas.bind_all("<BackSpace>",self.delete)
         self.canvas.bind_all("<Return>",self.enter)
         self.canvas.pack()
-        heading = Label(self.window, text = "Wordle", font = ("DIN Condensed", 35, "bold"), fg = "white", bg = "black")
-        heading.place(x = 500, y = 30, anchor = CENTER)
-        heading2 = Label(self.window, text = "+", font = ("Arial", 35), fg = "white", bg = "black")
-        heading2.place(x = 550, y = 30, anchor = CENTER)
+        heading1 = self.canvas.create_text(500,30, anchor = CENTER)
+        self.canvas.itemconfig(heading1, text="Wordle",font = ("DIN Condensed", 35, "bold"), fill = "white")
+        heading2 = self.canvas.create_text(555,25, anchor = CENTER)
+        self.canvas.itemconfig(heading2, text="+",font = ("DIN Condensed", 35, "bold"), fill = "white")
         self.squares = []
         for y in range(115, 440, 55):
             square = []
@@ -142,6 +143,7 @@ class Screen:
             self.guess = -1
             self.window.after(5000, self.gameOver, self.guess)
     def keyPressed(self, event):
+        if self.inMode: return
         if event.char in self.letters or event.char in self.letters.lower():
             if len(self.current) < 5:
                 self.current += event.char.lower()
@@ -172,5 +174,8 @@ class Screen:
     def gameOver(self, guessNum):
         self.window.quit()
     def getGuess(self):
-
         return self.guess
+    def pauseGame(self):
+        self.inMode = True
+    def resumeGame(self):
+        self.inMode = False
