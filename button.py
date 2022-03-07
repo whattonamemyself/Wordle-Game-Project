@@ -9,12 +9,16 @@ class Button:
         self.x2 = x2
         self.y2 = y2
         self.func = func
+        self.active = True
         self.loop()
+    def stop(self):
+        self.active = False
     def inside(self, x, y, x1, y1, x2, y2):
         return x >= x1 and x <= x2 and y >= y1 and y <= y2
     def loop(self):
-        if self.inputs.isMouseDown() and not self.mouseWasDown: 
-            if self.inside(self.inputs.getMouseX(), self.inputs.getMouseY(), self.x1, self.y1, self.x2, self.y2):
-                self.func()
-        self.mouseWasDown = self.inputs.isMouseDown()
-        self.window.after(16, self.loop)
+        if self.active:
+            if self.inputs.isMouseDown() and not self.mouseWasDown: 
+                if self.inside(self.inputs.getMouseX(), self.inputs.getMouseY(), self.x1, self.y1, self.x2, self.y2):
+                    self.func()
+            self.mouseWasDown = self.inputs.isMouseDown()
+            self.window.after(16, self.loop)

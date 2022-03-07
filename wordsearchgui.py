@@ -69,6 +69,7 @@ class WSGUI():
         self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz") #alphabet
         self.alphaDisplay = WordDisplayer(self.alpha, (66, 536))
         self.confetti = Confetti(self.canvas, self.window)
+        self.active = False
         w = self.wordsearch.getWidth()
         h = self.wordsearch.getHeight()
         self.hoverPos = [0,0]
@@ -151,79 +152,84 @@ class WSGUI():
             self.renderHL(guess, "#69F6F9")
         self.alphaDisplay.setWordleWord(self.alpha)
         self.alphaDisplay.upd(self.canvas, self.canvasItems)
-
+    def start(self):
+        self.active = True
+        self.update()
+    def stop(self):
+        self.active = False
     def update(self): #updates every frame
-        for x in self.canvasItems:
-            self.canvas.delete(x)
-        self.canvasItems = []
-        w = self.wordsearch.getHeight()
-        h = self.wordsearch.getHeight()
+        if self.active:
+            for x in self.canvasItems:
+                self.canvas.delete(x)
+            self.canvasItems = []
+            w = self.wordsearch.getHeight()
+            h = self.wordsearch.getHeight()
 
-        mousePos = self.getPos(self.inputs.getMouseX(), self.inputs.getMouseY())
-        mousePos2 = mousePos[:]
-        if mousePos2[0] < 0: mousePos2[0] = 0
-        if mousePos2[1] < 0: mousePos2[1] = 0
-        if mousePos2[0] >= w: mousePos2[0] = w-1
-        if mousePos2[1] >= h: mousePos2[1] = h-1
-        target = self.getPos2(mousePos2[0], mousePos2[1])
-        speed = 3.1415926535897932384626533
-        self.hoverPos[0] += (target[0] - self.hoverPos[0]) / speed
-        self.hoverPos[1] += (target[1] - self.hoverPos[1]) / speed
+            mousePos = self.getPos(self.inputs.getMouseX(), self.inputs.getMouseY())
+            mousePos2 = mousePos[:]
+            if mousePos2[0] < 0: mousePos2[0] = 0
+            if mousePos2[1] < 0: mousePos2[1] = 0
+            if mousePos2[0] >= w: mousePos2[0] = w-1
+            if mousePos2[1] >= h: mousePos2[1] = h-1
+            target = self.getPos2(mousePos2[0], mousePos2[1])
+            speed = 3.1415926535897932384626533
+            self.hoverPos[0] += (target[0] - self.hoverPos[0]) / speed
+            self.hoverPos[1] += (target[1] - self.hoverPos[1]) / speed
 
 
-        if self.isDragging: # creates the gray marker
-            self.curHL = None
-            self.curGuess = ""
-            a = self.getPos2(self.mouseDownX, self.mouseDownY)
-            b = self.hoverPos
-            self.renderHL(a+b, col="#696969")
-            c = mousePos2[0] - self.mouseDownX
-            d = mousePos2[1] - self.mouseDownY
-            if not (c == 0 and d == 0):
-                l = max(abs(c),abs(d))
-                if l >= 2:
-                    e = [c/l,d/l]
-                    dir = -1
-                    for i, v in enumerate(direction):
-                        if e[0] == v[0] and e[1] == v[1]:
-                            dir = i
-                    if dir != -1:
-                        self.curHL = [self.mouseDownX, self.mouseDownY, mousePos2[0], mousePos2[1]]
-                        self.curHL[:2] = self.getPos2(self.curHL[0], self.curHL[1])
-                        self.curHL[2:] = self.getPos2(self.curHL[2], self.curHL[3])
-                        self.curGuess = self.wordsearch.getWord(self.mouseDownX, self.mouseDownY, dir, l + 1)
+            if self.isDragging: # creates the gray marker
+                self.curHL = None
+                self.curGuess = ""
+                a = self.getPos2(self.mouseDownX, self.mouseDownY)
+                b = self.hoverPos
+                self.renderHL(a+b, col="#696969")
+                c = mousePos2[0] - self.mouseDownX
+                d = mousePos2[1] - self.mouseDownY
+                if not (c == 0 and d == 0):
+                    l = max(abs(c),abs(d))
+                    if l >= 2:
+                        e = [c/l,d/l]
+                        dir = -1
+                        for i, v in enumerate(direction):
+                            if e[0] == v[0] and e[1] == v[1]:
+                                dir = i
+                        if dir != -1:
+                            self.curHL = [self.mouseDownX, self.mouseDownY, mousePos2[0], mousePos2[1]]
+                            self.curHL[:2] = self.getPos2(self.curHL[0], self.curHL[1])
+                            self.curHL[2:] = self.getPos2(self.curHL[2], self.curHL[3])
+                            self.curGuess = self.wordsearch.getWord(self.mouseDownX, self.mouseDownY, dir, l + 1)
+                
             
-        
-        if self.inputs.isMouseDown() and (not self.mouseWasDown) and mousePos[0] >= 0 and mousePos[1] >= 0 and mousePos[0] < w and mousePos[1] < h: 
-            self.isDragging = True
-            self.mouseDownX = mousePos[0]
-            self.mouseDownY = mousePos[1]
+            if self.inputs.isMouseDown() and (not self.mouseWasDown) and mousePos[0] >= 0 and mousePos[1] >= 0 and mousePos[0] < w and mousePos[1] < h: 
+                self.isDragging = True
+                self.mouseDownX = mousePos[0]
+                self.mouseDownY = mousePos[1]
+                
+            if self.isDragging or ((not self.inputs.isMouseDown()) and mousePos[0] >= 0 and mousePos[1] >= 0 and mousePos[0] < w and mousePos[1] < h): #highlight is on
+                tmp = self.canvas.create_oval(self.hoverPos[0] - 15, self.hoverPos[1] - 15, self.hoverPos[0] + 15, self.hoverPos[1] + 15, fill = "#696969", outline = "")
+                self.canvas.tag_lower(tmp)
+                self.canvasItems.append(tmp)
             
-        if self.isDragging or ((not self.inputs.isMouseDown()) and mousePos[0] >= 0 and mousePos[1] >= 0 and mousePos[0] < w and mousePos[1] < h): #highlight is on
-            tmp = self.canvas.create_oval(self.hoverPos[0] - 15, self.hoverPos[1] - 15, self.hoverPos[0] + 15, self.hoverPos[1] + 15, fill = "#696969", outline = "")
-            self.canvas.tag_lower(tmp)
+            if not self.inputs.isMouseDown(): #not dragging
+                self.isDragging = False
+                self.mouseDownX = -1
+                self.mousedownY = -1
+
+
+            if not self.curHL == None and not self.isDragging:
+                self.renderHL(self.curHL)
+
+            if len(self.curGuess): #displays current text
+                text = self.canvas.create_text(575,95, anchor = tk.NW)
+                self.canvas.itemconfig(text, text=self.curGuess,font = "Courier 36", fill = "white")
+                self.canvasItems.append(text)
+
+            tmp = self.canvas.create_line(575,130,900,130,width = 2.718, fill = "#FFFFFF")
             self.canvasItems.append(tmp)
-        
-        if not self.inputs.isMouseDown(): #not dragging
-            self.isDragging = False
-            self.mouseDownX = -1
-            self.mousedownY = -1
 
-
-        if not self.curHL == None and not self.isDragging:
-            self.renderHL(self.curHL)
-
-        if len(self.curGuess): #displays current text
-            text = self.canvas.create_text(575,95, anchor = tk.NW)
-            self.canvas.itemconfig(text, text=self.curGuess,font = "Courier 36", fill = "white")
-            self.canvasItems.append(text)
-
-        tmp = self.canvas.create_line(575,130,900,130,width = 2.718, fill = "#FFFFFF")
-        self.canvasItems.append(tmp)
-
-        self.manageGuesses()
-        self.mouseWasDown = self.inputs.isMouseDown()
-        self.window.after(16, self.update)
+            self.manageGuesses()
+            self.mouseWasDown = self.inputs.isMouseDown()
+            self.window.after(16, self.update)
 
 def main():
     window = tk.Tk()
@@ -234,7 +240,7 @@ def main():
     wordsearch.genWordSearch()
     print(wordsearch.target)    
     wsgui = WSGUI(wordsearch, inputs, canvas, window)
-    wsgui.update()
+    wsgui.start()
     print("HII")
     window.mainloop()
 if __name__ == "__main__":
