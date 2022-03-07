@@ -20,13 +20,15 @@ class StatsDisplayer:
         self.inputs = inputs
         self.wordleplayer = WordlePlayer(name, maxtries)
         self.wordlesearch = WordlePlayer(name, maxtries)
-        self.button = Button(inputs, window, self.open, 800,50,900,150)
+        self.button = Button(inputs, window, self.open, 950,0,1000,50)
         self.closebutton = None
         self.mode = 0
         self.bg = None
         self.tick = None
         self.active = False
-        self.canvas.create_rectangle(800,50,900,150,fill="red")
+        text = self.canvas.create_text(952,50, anchor = tk.NW)           
+        self.canvas.itemconfig(text, text="📊",font = ("Courier", 50, "bold"), fill = "black")
+        
     def setModeWordle(self):
         self.mode = 0
     def setModeWordleSearch(self):
@@ -46,6 +48,8 @@ class StatsDisplayer:
         res.append(self.canvas.create_oval(x2-rad*2, y2-rad*2, x2, y2, fill=col, outline = ""))
         return res
     def open(self):
+        if self.active:
+            return
         self.closebutton = Button(self.inputs, self.window, self.close, 640,110,690,160)
 
         self.bg = [300,100,700,500]
@@ -102,15 +106,15 @@ class StatsDisplayer:
         tries = stats.getTries()
         for i in range(self.maxtries):
             self.bars[i] += (tries[i] - self.bars[i])/5
-            bar = self.canvas.create_rectangle(350, i*40 + 245 , 350 + self.bars[i]*3, i*40 + 270, outline = "", fill = "green")
+            bar = self.canvas.create_rectangle(350, i*40 + 240 , 350 + self.bars[i]*3, i*40 + 270, outline = "", fill = "green")
             self.canvasitems.append(bar)
 
-            self.bars[i] += (tries[i] - self.bars[i])/5
-            bar = self.canvas.create_rectangle(350, i*40 + 245 , 350 + self.bars[i]*3, i*40 + 270, outline = "", fill = "green")
-            self.canvasitems.append(bar)
-
-            text = self.canvas.create_text(330,i*40+240, anchor = tk.NW)           
+            text = self.canvas.create_text(330,i*40+245, anchor = tk.NW)           
             self.canvas.itemconfig(text, text=str(i),font = ("DIN Condensed", 20, "bold"), fill = "black")
+            self.canvasitems.append(text)
+            
+            text = self.canvas.create_text(370 + self.bars[i]*3,i*40+245, anchor = tk.NW)           
+            self.canvas.itemconfig(text, text=str(stats.tries[i]),font = ("DIN Condensed", 20, "bold"), fill = "black")
             self.canvasitems.append(text)
 
         self.tick += 1
