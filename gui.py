@@ -2,7 +2,7 @@
 from tkinter import *
 from wordbank import WordBank
 from wordleword import WordleWord
-import time
+from confettiuwu import Confetti
 
 class Screen:   
     def __init__(self, canvas, window, isHard, word, maxguess):
@@ -11,6 +11,7 @@ class Screen:
         self.isHard = isHard
         self.window = window
         self.canvas = canvas
+        self.confetti = Confetti(self.canvas, self.window)
         self.alpha = WordleWord("abcdefghijklmnopqrstuvwxyz")
         self.possible_words = WordBank("words_alpha.txt")
         self.word = word
@@ -134,10 +135,11 @@ class Screen:
                 self.letterNotCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
         self.hasWon = correctCount == 5
         if self.hasWon:
+            self.confetti.__init__(self.canvas, self.window)
+            self.window.after(0,self.confetti.update)
             self.window.after(5000, self.gameOver, self.guess)
         elif self.guess >= self.maxguess:
             self.guess = -1
-            print(self.guess, "?")
             self.window.after(5000, self.gameOver, self.guess)
     def keyPressed(self, event):
         if event.char in self.letters or event.char in self.letters.lower():
@@ -168,9 +170,7 @@ class Screen:
             self.guess += 1
             self.current = ""
     def gameOver(self, guessNum):
-        print(guessNum)
         self.window.quit()
-        print(guessNum)
     def getGuess(self):
 
         return self.guess

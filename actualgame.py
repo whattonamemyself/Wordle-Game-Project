@@ -10,7 +10,7 @@ def actualgame():
     window = Tk()
     canvas = Canvas(window, width = 1000, height = 600, bg = "black")
     canvas.pack()
-    all_words = WordBank("words_alpha.txt")
+    all_words = WordBank("common5letter.txt")
     inputs = InputWrapper(canvas)
     displaySettings = SettingsDisplay(canvas, window, inputs)   
     mode = "normal"
