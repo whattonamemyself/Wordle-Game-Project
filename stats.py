@@ -11,17 +11,18 @@ def __init__(self, n, maxtries):
     self.maxstreak = 0
     self.tries = [0] * maxtries 
 """
-class StatsDisplayer(WordlePlayer):
+class StatsDisplayer:
     def __init__(self, canvas, window, inputs, name, maxtries = 6): #tk.canvas, tk.window, string, int
         self.canvas = canvas
         self.canvasitems = []
         self.window = window
         self.inputs = inputs
+        self.wordleplayer = WordlePlayer(name, maxtries)
+        self.wordlesearch = WordlePlayer(name, maxtries)
         self.button = Button(inputs, window, self.open, 800,50,900,150)
         self.bg = None
         self.tick = None
         self.canvas.create_rectangle(800,50,900,150,fill="red")
-        super().__init__(name, maxtries)
 
     def roundrect(self, x1, y1, x2, y2, col = "red", rad=20):
         self.canvasitems.append(self.canvas.create_rectangle(x1+rad, y1, x2-rad, y2, fill=col, outline = ""))
