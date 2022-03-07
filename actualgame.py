@@ -12,13 +12,11 @@ def actualgame():
     canvas.pack()
     all_words = WordBank("common5letter.txt")
     inputs = InputWrapper(canvas)
-    mode = "normal"
     while True:
-        if mode == "normal":
-            word = all_words.getRandom()
-            screen = Screen(canvas, window, False, word, 6)
-            displaySettings = SettingsDisplay(canvas, window, inputs, screen)
-            window.mainloop()
+        word = all_words.getRandom()
+        screen = Screen(canvas, window, False, word, 6)
+        displaySettings = SettingsDisplay(canvas, window, inputs, screen)
+        window.mainloop()
     # ws = WordSearch(20,20)
     # ws.genWordSearch()
     # gui = WSGUI(ws,inputs, canvas, window)

@@ -136,7 +136,9 @@ class Screen:
                 self.letterNotCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
         self.hasWon = correctCount == 5
         if self.hasWon:
+            self.confetti.stop()
             self.confetti.__init__(self.canvas, self.window)
+            print("should be printing")
             self.window.after(0,self.confetti.update)
             self.window.after(5000, self.gameOver, self.guess)
         elif self.guess >= self.maxguess:
