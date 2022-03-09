@@ -5,7 +5,8 @@ from wordleword import WordleWord
 from confettiuwu import Confetti
 
 class Screen:   
-    def __init__(self, canvas, window, isHard, word, maxguess):
+    def __init__(self, canvas, window,gameover, isHard, word, maxguess):
+        self.gameOver = gameover
         self.maxguess = maxguess
         self.hasWon = False
         self.isHard = isHard
@@ -22,14 +23,17 @@ class Screen:
         self.somewhere = []
         self.guess = 1
         self.inMode = False
+        self.canvasitems = [] # to store the items on the canvas that you created
         self.canvas.bind_all('<KeyPress>',self.keyPressed)
         self.canvas.bind_all("<BackSpace>",self.delete)
         self.canvas.bind_all("<Return>",self.enter)
-        self.canvas.pack()
+
         heading1 = self.canvas.create_text(500,30, anchor = CENTER)
         self.canvas.itemconfig(heading1, text="Wordle",font = ("DIN Condensed", 35, "bold"), fill = "white")
+        self.canvasitems.append(heading1)
         heading2 = self.canvas.create_text(555,25, anchor = CENTER)
         self.canvas.itemconfig(heading2, text="+",font = ("DIN Condensed", 35, "bold"), fill = "white")
+        self.canvasitems.append(heading2)
         self.squares = []
         for y in range(115, 440, 55):
             square = []
@@ -38,7 +42,8 @@ class Screen:
             self.squares.append(square)
         for i in self.squares:
             for j in i:
-                self.canvas.create_rectangle(j[0], j[1], j[2], j[3], fill = "#141414", outline = "#3c3c3c")
+                sq = self.canvas.create_rectangle(j[0], j[1], j[2], j[3], fill = "#141414", outline = "#3c3c3c")
+                self.canvasitems.append(sq)
         self.alphabet = []
         for x in range(322, 682, 36):
             self.alphabet.append([x,415,x+32,460])
@@ -49,56 +54,72 @@ class Screen:
         self.letters = "qwertyuiopasdfghjklzxcvbnm".upper()
         self.current = ""
         for i,v in enumerate(self.alphabet):
-            self.canvas.create_rectangle(v[0], v[1], v[2], v[3], fill = "#848484")
+            rect = self.canvas.create_rectangle(v[0], v[1], v[2], v[3], fill = "#848484")
+            self.canvasitems.append(rect)
             x = (v[0]+v[2])/2
             y = (v[1]+v[3])/2
-            self.canvas.create_text((x, y), text = self.letters[i], font = ("DIN Condensed", 20, "bold"), 
+            txt = self.canvas.create_text((x, y), text = self.letters[i], font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white")
+            self.canvasitems.append(txt)
     def squareCorrect(self, guess, pos, char):
         coords = self.squares[guess][pos]
-        self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#548c4c")
+        rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#548c4c")
+        self.canvasitems.append(rect)
         x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
-        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
+        txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
                                     fill = "white")
+        self.canvasitems.append(txt)
     def letterCorrect(self, pos, char):
         coords = self.alphabet[pos]
-        self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#548c4c")
+        rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#548c4c")
+        self.canvasitems.append(rect)
         x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
-        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
+        txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white")
+        self.canvasitems.append(txt)
     def squareNotCorrect(self, guess, pos, char):
         coords = self.squares[guess][pos]
-        self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#3c3c3c")
+        rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#3c3c3c")
+        self.canvasitems.append(rect)
         x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
-        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
+        txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
                                     fill = "white")
+        self.canvasitems.append(txt)
     def letterNotCorrect(self, pos, char):
         coords = self.alphabet[pos]
-        self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#3c3c3c")
+        rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#3c3c3c")
+        self.canvasitems.append(rect)
         x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
-        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
+        txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white")
+        self.canvasitems.append(txt)
     def squareMisplaced(self, guess, pos, char):
         coords = self.squares[guess][pos]
-        self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")  
+        rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")  
+        self.canvasitems.append(rect)
         x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
-        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
+        txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
                                     fill = "white")  
+        self.canvasitems.append(txt)
     def letterMisplaced(self, pos, char):
         coords = self.alphabet[pos]
-        self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")      
+        rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")   
+        self.canvasitems.append(rect)   
         x, y = (coords[0]+coords[2])/2, (coords[1]+coords[3])/2
-        self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
+        txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white") 
+        self.canvasitems.append(txt)
     def displayCurrentWord(self):
         row = self.squares[self.guess-1]
         for i in range(5):
             box = row[i]
-            self.canvas.create_rectangle(box[0], box[1], box[2], box[3], fill = "#141414", outline = "#3c3c3c") 
+            rect = self.canvas.create_rectangle(box[0], box[1], box[2], box[3], fill = "#141414", outline = "#3c3c3c") 
+            self.canvasitems.append(rect)
             if i < len(self.current)    :
                 x = (box[0]+box[2])/2
                 y = (box[1]+box[3])/2
-                self.canvas.create_text((x, y), text = self.current[i].upper(), font = ("DIN Condensed", 30, "bold"), fill = "white")
+                txt = self.canvas.create_text((x, y), text = self.current[i].upper(), font = ("DIN Condensed", 30, "bold"), fill = "white")
+                self.canvasitems.append(txt)
     def displayFinalWord(self):
         from markguess import markGuess
         modified = WordleWord(self.current)
@@ -140,10 +161,10 @@ class Screen:
             self.confetti.__init__(self.canvas, self.window)
             print("should be printing")
             self.window.after(0,self.confetti.update)
-            self.window.after(5000, self.gameOver, self.guess)
+            self.window.after(0, self.gameOver, self.guess)
         elif self.guess >= self.maxguess:
             self.guess = -1
-            self.window.after(5000, self.gameOver, self.guess)
+            self.window.after(0, self.gameOver, self.guess)
     def keyPressed(self, event):
         if self.inMode: return
         if event.char in self.letters or event.char in self.letters.lower():
@@ -173,11 +194,17 @@ class Screen:
             self.displayFinalWord()
             self.guess += 1
             self.current = ""
-    def gameOver(self, guessNum):
-        self.window.quit()
     def getGuess(self):
         return self.guess
-    def pauseGame(self):
+    def stop(self):
         self.inMode = True
-    def resumeGame(self):
+    def start(self):
         self.inMode = False
+    def end(self):
+        self.stop()
+        self.canvas.unbind('<KeyPress>')
+        self.canvas.unbind("<BackSpace>")
+        self.canvas.unbind("<Return>")
+        for item in self.canvasitems:
+            self.canvas.delete(item)
+        

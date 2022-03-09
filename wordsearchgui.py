@@ -50,16 +50,18 @@ class WordDisplayer:
         self.tick += 1
 
 class WSGUI():
-    def __init__(self,ws,inputs,canvas, window):
+    def __init__(self,ws,inputs,canvas, window, gameover, isHard):
         self.wordsearch = ws
         self.inputs = inputs
         self.canvas = canvas
         self.window = window
+        self.gameover = gameover
         self.wordlist = WordBank("words_alpha.txt") # word list
         self.mouseDownX = -1
         self.mouseDownY = -1
         self.isDragging = False
         self.mouseWasDown = False
+        self.gameActive = True
         self.canvasItems = [] # list of all canvas items so i can delete them to update them every frame
         self.curGuess = "" # current guess
         self.guesses = [] # all guesses
@@ -70,6 +72,8 @@ class WSGUI():
         self.alphaDisplay = WordDisplayer(self.alpha, (66, 536))
         self.confetti = Confetti(self.canvas, self.window)
         self.active = False
+        self.isHard = isHard
+        self.otherCanvasItems = []
         w = self.wordsearch.getWidth()
         h = self.wordsearch.getHeight()
         self.hoverPos = [0,0]
@@ -77,7 +81,9 @@ class WSGUI():
             for y in range(h):
                 p = self.getPos2(x, y)
                 text = canvas.create_text(p[0], p[1], anchor = tk.CENTER)
-                canvas.itemconfig(text, text=self.wordsearch.getGrid()[x][y],font = "Rubik 12 bold", fill = "black")
+                self.otherCanvasItems.append(text)
+                color = "black" if isHard else "white"
+                canvas.itemconfig(text, text=self.wordsearch.getGrid()[x][y],font = "Rubik 12 bold", fill = color)
     def getPos(self, x, y):
         h = self.wordsearch.getHeight()
         return [round((x - 75)/30), round((h * 30 - y + 50)/30)]
@@ -103,7 +109,7 @@ class WSGUI():
         text = self.canvas.create_text(919,69, anchor = tk.NW)
         self.canvas.itemconfig(text, text="☑",font = "Courier 80", fill = "black") #renders checkmark
         self.canvasItems.append(text)
-        if len(self.curGuess) >= 3: # yes current guess
+        if len(self.curGuess) >= 3 and self.gameActive: # yes current guess, game isnt over
             tmp = self.canvas.create_rectangle(925,95,960,130, outline = "", fill = "#00cc42")
             self.canvas.lower(tmp)
             self.canvasItems.append(tmp)
@@ -120,9 +126,13 @@ class WSGUI():
                         self.curHL = None
                         if correct == 1: # word is correct
                             self.confetti.__init__(self.canvas, self.window)
+                            self.gameActive = False
                             self.window.after(0,self.confetti.update)
+                            self.window.after(0,self.gameover, len(self.guesses))
                             pass #TODO - return win + guesses | return len(self.guesses) | stop
                         elif len(self.guesses) == 6:
+                            self.gameActive = False
+                            self.window.after(0,self.gameover, -1)
                             pass #TODO - return lose | return 7 | stop
                     else:
                         self.invalid = 800 #displays message saying word is invalid
@@ -157,11 +167,15 @@ class WSGUI():
         self.update()
     def stop(self):
         self.active = False
+    def end(self):
+        for x in self.otherCanvasItems:
+            self.canvas.delete(x)
+        self.stop()
     def update(self): #updates every frame
-        if not self.active:
-            return
         for x in self.canvasItems:
             self.canvas.delete(x)
+        if not self.active:
+            return
         self.canvasItems = []
         w = self.wordsearch.getHeight()
         h = self.wordsearch.getHeight()

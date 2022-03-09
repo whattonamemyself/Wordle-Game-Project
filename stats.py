@@ -12,7 +12,9 @@ def __init__(self, n, maxtries):
     self.tries = [0] * maxtries 
 """
 class StatsDisplayer:
-    def __init__(self, canvas, window, inputs, name, maxtries = 6): #tk.canvas, tk.window, string, int
+    def __init__(self, canvas, window, inputs, start, stop, name, maxtries = 6): #tk.canvas, tk.window, string, int
+        self.start = start
+        self.stop = stop
         self.canvas = canvas
         self.maxtries = maxtries
         self.canvasitems = []
@@ -27,7 +29,7 @@ class StatsDisplayer:
         self.tick = None
         self.active = False
         text = self.canvas.create_text(952,50, anchor = tk.NW)           
-        self.canvas.itemconfig(text, text="📊",font = ("Courier", 50, "bold"), fill = "black")
+        self.canvas.itemconfig(text, text="📊",font = ("Courier", 50, "bold"), fill = "white")
         
     def setModeWordle(self):
         self.mode = 0
@@ -48,6 +50,7 @@ class StatsDisplayer:
         res.append(self.canvas.create_oval(x2-rad*2, y2-rad*2, x2, y2, fill=col, outline = ""))
         return res
     def open(self):
+        self.stop()
         if self.active:
             return
         self.closebutton = Button(self.inputs, self.window, self.close, 640,110,690,160)
@@ -66,13 +69,14 @@ class StatsDisplayer:
         self.active = False
         for item in self.canvasitems:
             self.canvas.delete(item)
+        self.start()
 
     def loop(self):
         if not self.active:
             return
         for item in self.canvasitems:
             self.canvas.delete(item)
-        bg = self.roundrect(self.bg[0],self.bg[1],self.bg[2],self.bg[3],col="#696969")
+        bg = self.roundrect(self.bg[0],self.bg[1],self.bg[2],self.bg[3],col="white")
         for i in range(len(bg)):
             self.canvasitems.append(bg[i])
 
