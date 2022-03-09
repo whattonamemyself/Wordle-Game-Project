@@ -114,7 +114,7 @@ class StatsDisplayer:
             self.canvasitems.append(bar)
 
             text = self.canvas.create_text(330,i*40+245, anchor = tk.NW)           
-            self.canvas.itemconfig(text, text=str(i),font = ("DIN Condensed", 20, "bold"), fill = "black")
+            self.canvas.itemconfig(text, text=str(i+1),font = ("DIN Condensed", 20, "bold"), fill = "black")
             self.canvasitems.append(text)
             
             text = self.canvas.create_text(370 + self.bars[i]*3,i*40+245, anchor = tk.NW)           

@@ -6,6 +6,7 @@ from wordsearch import WordSearch
 from inputwrapper import InputWrapper
 from settings import SettingsDisplay
 from stats import StatsDisplayer
+import button
 
 all_words = WordBank("common5letter.txt")
 displaySettings = None
@@ -15,6 +16,8 @@ window = None
 canvas = None
 inputs = None
 mode = 0
+
+inGame = False
 
 def gameOver(tries):
     global window
@@ -26,8 +29,9 @@ def gameover(win, tries):
     global displaySettings 
     global statsDisplayer 
     global screen
+    global inGame
+    inGame = False
     statsDisplayer.updateStats(win, tries)
-    #newgame()
     statsDisplayer.open()
 
 def stop():
@@ -48,6 +52,10 @@ def newgame():
     global mode
     global all_words
     global inputs
+    global inGame
+    if inGame:
+        statsDisplayer.updateStats(0, 0)
+    inGame = True
     if screen != None:
         screen.end()
         screen = None
@@ -60,6 +68,7 @@ def newgame():
         print(ws.getTarget())
         screen = WSGUI(ws, inputs, canvas, window, gameOver, False)
         screen.start()
+
 def actualgame():
     global displaySettings 
     global statsDisplayer 
@@ -76,6 +85,8 @@ def actualgame():
     displaySettings = SettingsDisplay(canvas, window, inputs, screen)
     statsDisplayer = StatsDisplayer(canvas, window, inputs, start, stop, "uwu", 6)
 
+    canvas.create_rectangle(0,0,50,50,outline = "", fill = "red")
+    newGameButton = button.Button(inputs, window, newgame, 0, 0, 50, 50)
     newgame()
     window.mainloop()
 actualgame()
