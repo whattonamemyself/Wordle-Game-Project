@@ -42,6 +42,8 @@ def stop():
     global pause
     pause = True
     screen.stop()
+    statsDisplayer.stop()
+    displaySettings.stop()
 
 def start():
     global displaySettings 
@@ -50,6 +52,8 @@ def start():
     global pause
     pause = False
     screen.start()
+    statsDisplayer.start()
+    displaySettings.start()
 
 def newgame():
     if pause:

@@ -28,9 +28,13 @@ class StatsDisplayer:
         self.bg = None
         self.tick = None
         self.active = False
+        self.buttonPaused = False
         text = self.canvas.create_text(950,5, anchor = tk.NW)           
         self.canvas.itemconfig(text, text="📊",font = ("Courier", 50, "bold"), fill = "white")
-        
+    def stop(self):
+        self.buttonPaused = True
+    def start(self):
+        self.buttonPaused = False
     def setModeWordle(self):
         self.mode = 0
     def setModeWordleSearch(self):
@@ -50,6 +54,8 @@ class StatsDisplayer:
         res.append(self.canvas.create_oval(x2-rad*2, y2-rad*2, x2, y2, fill=col, outline = ""))
         return res
     def open(self):
+        if self.buttonPaused:
+            return
         self.stop()
         if self.active:
             return
