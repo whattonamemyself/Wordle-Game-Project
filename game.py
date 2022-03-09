@@ -12,7 +12,6 @@ from setting import Setting
 from wordbank import WordBank
 from wordleword import WordleWord
 from wordleplayer import WordlePlayer
-from actualgame import actualgame
 
 # markGuess - will "mark" the guess and the alphabet according to the word
 def markGuess(word, guess, alphabet):
@@ -123,9 +122,9 @@ def playWordle():
 def main():
     answer = input("Are you a robot??").lower()
     if answer == 'y' or answer == 'yes':
-        playWordle()
+        from actualgame import actualgame
     else:
-        actualgame()
+        playWordle()
 
 player = WordlePlayer("mark",6)
 player.updateStats(1,2)
