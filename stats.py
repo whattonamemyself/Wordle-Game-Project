@@ -28,7 +28,7 @@ class StatsDisplayer:
         self.bg = None
         self.tick = None
         self.active = False
-        text = self.canvas.create_text(952,50, anchor = tk.NW)           
+        text = self.canvas.create_text(950,5, anchor = tk.NW)           
         self.canvas.itemconfig(text, text="📊",font = ("Courier", 50, "bold"), fill = "white")
         
     def setModeWordle(self):

@@ -2,8 +2,8 @@ class InputWrapper: #deals with all the input stuff
     def __init__(self, canvas):
         self.keys = {}
         self.mouseDown = False
-        self.mouseX = 0
-        self.mouseY = 0
+        self.mouseX = -1000
+        self.mouseY = -1000
         canvas.bind_all('<KeyPress>',self.keyPressed)
         canvas.bind_all('<KeyRelease>',self.keyReleased)
         canvas.bind_all('<ButtonPress-1>',self.mousePressed)
