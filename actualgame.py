@@ -15,6 +15,7 @@ screen = None
 window = None
 canvas = None
 inputs = None
+pause = False
 mode = 0
 
 inGame = False
@@ -38,15 +39,21 @@ def stop():
     global displaySettings 
     global statsDisplayer 
     global screen
+    global pause
+    pause = True
     screen.stop()
 
 def start():
     global displaySettings 
     global statsDisplayer 
     global screen
+    global pause
+    pause = False
     screen.start()
 
 def newgame():
+    if pause:
+        return
     global screen
     global canvas
     global mode
