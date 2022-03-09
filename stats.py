@@ -13,8 +13,8 @@ def __init__(self, n, maxtries):
 """
 class StatsDisplayer:
     def __init__(self, canvas, window, inputs, start, stop, name, maxtries = 6): #tk.canvas, tk.window, string, int
-        self.start = start
-        self.stop = stop
+        self.start2 = start
+        self.stop2 = stop
         self.canvas = canvas
         self.maxtries = maxtries
         self.canvasitems = []
@@ -56,7 +56,7 @@ class StatsDisplayer:
     def open(self):
         if self.buttonPaused:
             return
-        self.stop()
+        self.stop2()
         if self.active:
             return
         self.closebutton = Button(self.inputs, self.window, self.close, 640,110,690,160)
@@ -75,7 +75,7 @@ class StatsDisplayer:
         self.active = False
         for item in self.canvasitems:
             self.canvas.delete(item)
-        self.start()
+        self.start2()
 
     def loop(self):
         if not self.active:
