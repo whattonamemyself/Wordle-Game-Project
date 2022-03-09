@@ -19,7 +19,6 @@ class Button:
         if self.active:
             if self.inputs.isMouseDown() and not self.mouseWasDown: 
                 if self.inside(self.inputs.getMouseX(), self.inputs.getMouseY(), self.x1, self.y1, self.x2, self.y2):
-                    print("WHY")
                     self.func()
             self.mouseWasDown = self.inputs.isMouseDown()
             self.window.after(16, self.loop)

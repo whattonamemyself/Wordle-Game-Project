@@ -20,7 +20,7 @@ class SettingsDisplay:
         y = self.tl[1]+(self.br[1]-self.tl[1])/2
         self.canvas.create_text((x, y), text = "⚙", font = ("DIN Condensed", 50, "bold"), fill = "white")
     def settingsPressed(self):
-        if self.screen.transition: return
+        # if self.screen.transition: return
         if isinstance(self.screen, Screen):
             self.screen.pauseGame()
         elif isinstance(self.screen, WSGUI):
@@ -31,8 +31,8 @@ class SettingsDisplay:
         self.settingsWidgets.append(self.canvas.create_text(500,30, anchor = CENTER))
         self.canvas.itemconfig(self.settingsWidgets[-1], text="Settings",font = ("DIN Condensed", 35, "bold"), fill = "white")
         self.settingsButtons.append(Button(self.inputs, self.window, lambda: self.quitSettings("normal"), 200, 100, 500, 400))
-        self.settingsWidgets.append(self.canvas.create_rectangle(200, 400, 500, 100, fill = "green"))
-        self.settingsWidgets.append(self.canvas.create_text(450, 350, anchor = CENTER))
+        self.settingsWidgets.append(self.canvas.create_rectangle(150, 300, 200, 350, fill = "green"))
+        self.settingsWidgets.append(self.canvas.create_text(175, 325, anchor = CENTER))
         self.canvas.itemconfig(self.settingsWidgets[-1], text = "Normal Mode", font = ("DIN Condensed", 30, "bold"), fill = "white")
     def quitSettings(self, mode):
         for i in self.settingsWidgets:
