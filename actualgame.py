@@ -14,7 +14,7 @@ screen = None
 window = None
 canvas = None
 inputs = None
-mode = 1
+mode = 0
 
 def gameOver(tries):
     global window
