@@ -104,7 +104,7 @@ def actualgame():
     canvas.pack()
     inputs = InputWrapper(canvas)
     
-    displaySettings = SettingsDisplay(canvas, window, inputs, screen, setmode)
+    displaySettings = SettingsDisplay(canvas, window, inputs, screen, setmode, start, stop)
     statsDisplayer = StatsDisplayer(canvas, window, inputs, start, stop, "uwu", 6)
 
     canvas.create_rectangle(0,0,50,50,outline = "", fill = "red")
