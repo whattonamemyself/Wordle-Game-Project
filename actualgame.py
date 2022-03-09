@@ -69,14 +69,20 @@ def newgame():
     if mode == 0:
         word = all_words.getRandom()
         screen = Screen(canvas, window, gameOver, False, word, 6)
-    if mode == 1:
+    elif mode == 1:
         word = all_words.getRandom()
         screen = Screen(canvas, window, gameOver)
-    else:
+    elif mode == 2:
         ws = WordSearch(16,16)
         ws.genWordSearch()
         print(ws.getTarget())
         screen = WSGUI(ws, inputs, canvas, window, gameOver, False)
+        screen.start()
+    else:
+        ws = WordSearch(16,16)
+        ws.genWordSearch()
+        print(ws.getTarget())
+        screen = WSGUI(ws, inputs, canvas, window, gameOver, True)
         screen.start()
 def setmode(m):
     global mode
