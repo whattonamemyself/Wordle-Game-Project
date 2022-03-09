@@ -24,6 +24,7 @@ def renderShape(canvas, canvasitems, numpoints, size, rot, xpos, ypos, ghost, co
         col = '0' + col
     col = '#' + col
     shape = canvas.create_polygon(points,outline = "", fill = col, width = 0)
+    canvas.lower(shape)
     canvasitems.append(shape)
 class Confetti():
     def __init__(self,canvas, window):
