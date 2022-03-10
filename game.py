@@ -1,9 +1,10 @@
 '''
 Eric Hsu Shanker Ram
-Snapshot #1: Finished whole wordle game besides settings, + made a word search, hoping to merge the games in the future uwu
-Snapshot #2: A lot of gui updates & small changes to wordsearch, split the game into 2 modes: classic / word search, made separate guis for each mode uwu
-Snapshot #3: Gui of regular wordle done, almost finished wordsearch wordle, + settings and switching are WIP
-Snapshot #4: Everything pretty much done, just need to compile it together, + added confetti ;)
+Snapshot #1 (upload 1): Finished whole wordle game besides settings, + made a word search, hoping to merge the games in the future uwu
+Snapshot #2 (upload 2): A lot of gui updates & small changes to wordsearch, split the game into 2 modes: classic / word search, made separate guis for each mode uwu
+Snapshot #3 (upload 3): Gui of regular wordle done, almost finished wordsearch wordle, + settings and switching are WIP
+Snapshot #4 (upload 4): Everything pretty much done, just need to compile it together, + added confetti ;)
+Snapshot #5 (upload 69): Finished Final Project! added: statsdisplayer, settings, compilation of everything
 '''
 
 from tkinter import *
@@ -122,9 +123,9 @@ def playWordle():
 def main():
     answer = input("Are you a robot??").lower()
     if answer == 'y' or answer == 'yes':
-        from actualgame import actualgame
-    else:
         playWordle()
+    else:
+        from actualgame import actualgame
 
 player = WordlePlayer("mark",6)
 player.updateStats(1,2)
