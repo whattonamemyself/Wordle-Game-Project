@@ -72,6 +72,7 @@ class WSGUI():
         self.alphaDisplay = WordDisplayer(self.alpha, (66, 536))
         self.confetti = Confetti(self.canvas, self.window)
         self.active = False
+        self.ended = False
         self.isHard = isHard
         self.otherCanvasItems = []
         w = self.wordsearch.getWidth()
@@ -164,18 +165,23 @@ class WSGUI():
         self.alphaDisplay.upd(self.canvas, self.canvasItems)
     def start(self):
         self.active = True
+        self.ended = False
         self.update()
     def stop(self):
         self.active = False
     def end(self):
+        self.ended = True
+        self.active = False
         for x in self.otherCanvasItems:
             self.canvas.delete(x)
-        self.stop()
     def update(self): #updates every frame
+        if not self.active:
+            if self.ended:
+                for x in self.canvasItems:
+                    self.canvas.delete(x)
+            return
         for x in self.canvasItems:
             self.canvas.delete(x)
-        if not self.active:
-            return
         self.canvasItems = []
         w = self.wordsearch.getHeight()
         h = self.wordsearch.getHeight()

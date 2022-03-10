@@ -20,8 +20,9 @@ class StatsDisplayer:
         self.canvasitems = []
         self.window = window
         self.inputs = inputs
-        self.wordleplayer = WordlePlayer(name, maxtries)
-        self.wordlesearch = WordlePlayer(name, maxtries)
+        self.wordleplayer = [None] * 4
+        for i in range(4):
+            self.wordleplayer[i] = WordlePlayer(1,6)
         self.button = Button(inputs, window, self.open, 950,0,1000,50)
         self.closebutton = None
         self.mode = 0
@@ -35,15 +36,10 @@ class StatsDisplayer:
         self.buttonPaused = True
     def start(self):
         self.buttonPaused = False
-    def setModeWordle(self):
-        self.mode = 0
-    def setModeWordleSearch(self):
-        self.mode = 1
+    def setMode(self, mode):
+        self.mode = mode
     def updateStats(self, win, tries):
-        if self.mode == 0:
-            self.wordleplayer.updateStats(win, tries)
-        else:
-            self.wordlesearch.updateStats(win, tries)
+        self.wordleplayer[self.mode].updateStats(win, tries)
     def roundrect(self, x1, y1, x2, y2, col = "red", rad=20):
         res = []
         res.append(self.canvas.create_rectangle(x1+rad, y1, x2-rad, y2, fill=col, outline = ""))
@@ -92,10 +88,7 @@ class StatsDisplayer:
         self.canvasitems.append(text)
 
         #display stats
-        if self.mode == 0:
-            stats = self.wordleplayer
-        else:
-            stats = self.wordlesearch
+        stats = self.wordleplayer[self.mode]
         #text
         text = self.canvas.create_text(350,120, anchor = tk.NW)           
         self.canvas.itemconfig(text, text="Games Played: "+str(stats.gamesPlayed()),font = ("DIN Condensed", 20, "bold"), fill = "black")

@@ -64,9 +64,11 @@ def newgame():
     global all_words
     global inputs
     global inGame
+    global statsDisplayer
     if inGame:
         statsDisplayer.updateStats(0, 0)
     inGame = True
+    statsDisplayer.setMode(mode)
     if screen != None:
         screen.end()
         screen = None
