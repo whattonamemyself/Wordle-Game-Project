@@ -27,6 +27,10 @@ def renderShape(canvas, canvasitems, numpoints, size, rot, xpos, ypos, ghost, co
     canvas.lower(shape)
     canvasitems.append(shape)
 class Confetti():
+    """
+    Initializer
+    inputs: canvas, window
+    """
     def __init__(self,canvas, window):
         self.canvas = canvas
         self.window = window
@@ -60,10 +64,14 @@ class Confetti():
             else:
                 self.xpos.append(1000)
                 self.xv.append(random.random()*-15 + force * -10)
+    #clears confetti, call before deleting class
     def stop(self):
         for i in self.canvasitems:
             self.canvas.delete(i)
-    def update(self): #updates every frame
+
+    #updates every frame
+    #call only once, because it calls itself ;)
+    def update(self): 
         if self.tick > 80:
             for i in self.canvasitems:
                 self.canvas.delete(i)
@@ -82,14 +90,3 @@ class Confetti():
                         renderShape(self.canvas, self.canvasitems, self.shape[i] + 3, self.size[i], self.rot[i], self.xpos[i], self.ypos[i], self.ghost[i], self.col[i])
         self.tick += 1
         self.window.after(16, self.update)
-
-def main():
-    window = tk.Tk()
-    canvas = tk.Canvas(width = 1000, height = 600)
-    canvas.pack()
-    inputs = InputWrapper(canvas)
-    confetti = Confetti(canvas)
-    confetti.update()
-    window.mainloop()
-if __name__ == "__main__":
-    main()
