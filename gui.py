@@ -147,15 +147,17 @@ class Screen:
                 self.squareNotCorrect(self.guess-1,i, self.current[i].upper())
                 if not self.alpha.isCorrect(self.alpha.posOf(self.current[i])) and not self.alpha.isCorrect(self.alpha.posOf(self.current[i])):
                     self.alpha.setNotUsed(self.alpha.posOf(self.current[i]))
-        correctCount = 0
         for i in range(len(self.alpha.word)):
             if self.alpha.isCorrect(i):
-                correctCount += 1
                 self.letterCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
             elif self.alpha.isMisplaced(i):
                 self.letterMisplaced(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
             elif self.alpha.isNotUsed(i):
                 self.letterNotCorrect(self.letters.lower().find(self.alpha.charAt(i)), self.alpha.charAt(i).upper())
+        correctCount = 0
+        for i in range(5):
+            if modified.isCorrect(i):
+                correctCount += 1
         self.hasWon = correctCount == 5
         if self.hasWon:
             self.confetti.stop()
