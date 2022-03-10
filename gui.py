@@ -2,7 +2,7 @@
 from tkinter import *
 from wordbank import WordBank
 from wordleword import WordleWord
-from confettiuwu import Confetti
+from confetti import Confetti
 
 # when instance of Screen is made, it can controls gui for normal and hard mode for normal wordle 
 class Screen:   
