@@ -4,17 +4,16 @@ from button import Button
 from gui import Screen
 from wordsearchgui import WSGUI
 
-'''
-when instance of SettingsDisplay is made, it displays the button for settings
-canvas -> tkinter canvas
-window -> tkinter window
-inputs -> input wrapper, can detect movements and key presses
-setmode -> function which sets the current mode
-start -> function which lets other widgets on screen be interacted with
-stop -> function
-'''
-
+# when instance of SettingsDisplay is made, it displays the button for settings
 class SettingsDisplay:
+    '''
+    canvas -> tkinter canvas
+    window -> tkinter window
+    inputs -> input wrapper, can detect movements and key presses
+    setmode -> function which sets the current mode
+    start -> function which lets other widgets on screen be interacted with
+    stop -> function which stops other widgets on screen from being interacted with
+    '''
     def __init__(self, canvas, window, inputs, setmode, start, stop):
         self.start2 = start
         self.stop2 = stop
@@ -29,10 +28,16 @@ class SettingsDisplay:
         x = self.tl[0]+(self.br[0]-self.tl[0])/2
         y = self.tl[1]+(self.br[1]-self.tl[1])/2
         self.canvas.create_text((x, y), text = "⚙", font = ("DIN Condensed", 50, "bold"), fill = "white")
+
+    # stops settings button from opening
     def stop(self):
         self.settingsPaused = True
+
+    # lets settings button be opened
     def start(self):
         self.settingsPaused = False
+
+    # called when settings button is pressed, displays list of modes available
     def settingsPressed(self):
         if self.settingsPaused:
             return
@@ -68,6 +73,7 @@ class SettingsDisplay:
         self.settingsWidgets.append(self.canvas.create_text(75, 50, anchor = CENTER))
         self.canvas.itemconfig(self.settingsWidgets[-1], text = "Back", font = ("DIN Condensed", 30, "bold"), fill = "white")
 
+    # called when mode in settings is pressed, adjusts current mode accordingly
     def quitSettings(self, mode):
         self.start2()
         for i in self.settingsWidgets:

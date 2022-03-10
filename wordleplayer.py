@@ -38,8 +38,7 @@
 #===========================================================================
 from player import Player
 
-# TODO - make WordlePlayer
-
+# instance of WordlePlayer made for every player who plays
 class WordlePlayer(Player):
     def __init__(self, n, maxtries):
         super().__init__(n)

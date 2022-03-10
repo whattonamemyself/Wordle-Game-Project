@@ -1,14 +1,21 @@
-
+# imports
 from tkinter import *
 from wordbank import WordBank
 from wordleword import WordleWord
 from confettiuwu import Confetti
 
+# when instance of Screen is made, it can controls gui for normal and hard mode for normal wordle 
 class Screen:   
-    def __init__(self, canvas, window, gameover, isHard, word, maxguess):
+    '''
+    canvas -> tkinter canvas
+    window -> tkinter window
+    gameover -> boolean which turns on when game is over, stops user from pressing keys after game is over
+    isHard -> turns on when its hard mode
+    word -> correct word user is trying to guess
+    '''
+    def __init__(self, canvas, window, gameover, isHard, word):
         self.gameOver = gameover
         self.gameEnd = False
-        self.maxguess = maxguess
         self.hasWon = False
         self.isHard = isHard
         self.window = window
@@ -62,6 +69,7 @@ class Screen:
             txt = self.canvas.create_text((x, y), text = self.letters[i], font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white")
             self.canvasitems.append(txt)
+    # called to make specific letter on a specific row of wordleboard green because its correct
     def squareCorrect(self, guess, pos, char):
         coords = self.squares[guess][pos]
         rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#548c4c")
@@ -70,6 +78,7 @@ class Screen:
         txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
                                     fill = "white")
         self.canvasitems.append(txt)
+    # called to make specific letter of alphabet green because its correct
     def letterCorrect(self, pos, char):
         coords = self.alphabet[pos]
         rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#548c4c")
@@ -78,6 +87,7 @@ class Screen:
         txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white")
         self.canvasitems.append(txt)
+    # called to make specific letter on a specific row of wordleboard dark gray because its not correct
     def squareNotCorrect(self, guess, pos, char):
         coords = self.squares[guess][pos]
         rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#3c3c3c")
@@ -86,6 +96,7 @@ class Screen:
         txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
                                     fill = "white")
         self.canvasitems.append(txt)
+    # called to make specific letter of alphabet dark gray because its not correct
     def letterNotCorrect(self, pos, char):
         coords = self.alphabet[pos]
         rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#3c3c3c")
@@ -94,6 +105,7 @@ class Screen:
         txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white")
         self.canvasitems.append(txt)
+    # called to make specific letter on a specific row of wordleboard yellow because its misplaced
     def squareMisplaced(self, guess, pos, char):
         coords = self.squares[guess][pos]
         rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")  
@@ -102,6 +114,7 @@ class Screen:
         txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 30, "bold"), 
                                     fill = "white")  
         self.canvasitems.append(txt)
+    # called to make specific letter of alphabet yellow because its misplaced
     def letterMisplaced(self, pos, char):
         coords = self.alphabet[pos]
         rect = self.canvas.create_rectangle(coords[0], coords[1], coords[2], coords[3], fill = "#b49c3c")   
@@ -110,6 +123,7 @@ class Screen:
         txt = self.canvas.create_text((x, y), text = char, font = ("DIN Condensed", 20, "bold"), 
                                     fill = "white") 
         self.canvasitems.append(txt)
+    # displays the current word every time user enters in letters
     def displayCurrentWord(self):
         row = self.squares[self.guess-1]
         for i in range(5):
@@ -121,6 +135,7 @@ class Screen:
                 y = (box[1]+box[3])/2
                 txt = self.canvas.create_text((x, y), text = self.current[i].upper(), font = ("DIN Condensed", 30, "bold"), fill = "white")
                 self.canvasitems.append(txt)
+    # displays final word for each row and adds colors to each letter after user presses enter after they enter in 5 letter word
     def displayFinalWord(self):
         from markguess import markGuess
         modified = WordleWord(self.current)
@@ -165,10 +180,11 @@ class Screen:
             self.gameEnd = True
             self.window.after(0,self.confetti.update)
             self.window.after(0, self.gameOver, self.guess)
-        elif self.guess >= self.maxguess:
+        elif self.guess >= 6:
             self.gameEnd = True
             self.guess = -1
             self.window.after(0, self.gameOver, self.guess)
+    # called when key is pressed
     def keyPressed(self, event):
         if self.inMode: return
         if self.gameEnd: return
@@ -176,10 +192,12 @@ class Screen:
             if len(self.current) < 5:
                 self.current += event.char.lower()
                 self.displayCurrentWord()
+    # called when delete button is pressed
     def delete(self, event):
         if len(self.current) > 0:
             self.current = self.current[:-1]
             self.displayCurrentWord()
+    # called when enter button is pressed
     def enter(self, event):
         valid = False
         if len(self.current) == 5:
@@ -199,12 +217,13 @@ class Screen:
             self.displayFinalWord()
             self.guess += 1
             self.current = ""
-    def getGuess(self):
-        return self.guess
+    # called to stop user from interacting with widgets made in this class
     def stop(self):
         self.inMode = True
+    # called to let user interact with widgets made in this class
     def start(self):
         self.inMode = False
+    # called at end of game
     def end(self):
         self.stop()
         self.canvas.unbind('<KeyPress>')

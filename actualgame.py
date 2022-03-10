@@ -84,20 +84,18 @@ def newgame():
         screen = None
     if mode == 0:
         word = all_words.getRandom()
-        screen = Screen(canvas, window, gameOver, False, word, 6)
+        screen = Screen(canvas, window, gameOver, False, word)
     elif mode == 1:
         word = all_words.getRandom()
-        screen = Screen(canvas, window, gameOver, True, word, 6)
+        screen = Screen(canvas, window, gameOver, True, word)
     elif mode == 2:
         ws = WordSearch(16,16)
         ws.genWordSearch()
-        print(ws.getTarget())
         screen = WSGUI(ws, inputs, canvas, window, gameOver, False)
         screen.start()
     else:
         ws = WordSearch(16,16)
         ws.genWordSearch()
-        print(ws.getTarget())
         screen = WSGUI(ws, inputs, canvas, window, gameOver, True)
         screen.start()
 
@@ -127,7 +125,7 @@ def actualgame():
     inputs = InputWrapper(canvas)
     
     displaySettings = SettingsDisplay(canvas, window, inputs, setmode, start, stop)
-    statsDisplayer = StatsDisplayer(canvas, window, inputs, start, stop, "uwu", 6)
+    statsDisplayer = StatsDisplayer(canvas, window, inputs, start, stop, "")
 
     canvas.create_rectangle(0,0,100,50,outline = "", fill = "orange")
     newGameButton = button.Button(inputs, window, newgame, 0, 0, 100, 50)
