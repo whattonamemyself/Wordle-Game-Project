@@ -1,18 +1,25 @@
+# imports
 from tkinter import *
 from button import Button
-from inputwrapper import InputWrapper
 from gui import Screen
 from wordsearchgui import WSGUI
-from wordbank import WordBank
 
+'''
+when instance of SettingsDisplay is made, it displays the button for settings
+canvas -> tkinter canvas
+window -> tkinter window
+inputs -> input wrapper, can detect movements and key presses
+setmode -> function which sets the current mode
+start -> function which lets other widgets on screen be interacted with
+stop -> function
+'''
 
 class SettingsDisplay:
-    def __init__(self, canvas, window, inputs, screen, setmode, start, stop):
+    def __init__(self, canvas, window, inputs, setmode, start, stop):
         self.start2 = start
         self.stop2 = stop
         self.settingsPaused = False
         self.setmode = setmode
-        self.screen = screen
         self.canvas = canvas
         self.window = window
         self.inputs = inputs
@@ -30,10 +37,6 @@ class SettingsDisplay:
         if self.settingsPaused:
             return
         self.stop2()
-        if isinstance(self.screen, Screen):
-            self.screen.pauseGame()
-        elif isinstance(self.screen, WSGUI):
-            self.screen.stop()
         self.settingsWidgets = []
         self.settingsButtons = []
         self.settingsWidgets.append(self.canvas.create_rectangle(0, 600, 1000, 0, fill = "black"))
