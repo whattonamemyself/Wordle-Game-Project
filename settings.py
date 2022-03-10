@@ -50,6 +50,21 @@ class SettingsDisplay:
         self.settingsWidgets.append(self.canvas.create_text(225, 275, anchor = CENTER))
         self.canvas.itemconfig(self.settingsWidgets[-1], text = "Hard Mode", font = ("DIN Condensed", 30, "bold"), fill = "white")
 
+        self.settingsButtons.append(Button(self.inputs, self.window, lambda: self.quitSettings("ws"), 700, 150, 850, 200))
+        self.settingsWidgets.append(self.canvas.create_rectangle(700, 150, 850, 200, fill = "#848484"))
+        self.settingsWidgets.append(self.canvas.create_text(775, 175, anchor = CENTER))
+        self.canvas.itemconfig(self.settingsWidgets[-1], text = "Wordle Wordsearch", font = ("DIN Condensed", 20, "bold"), fill = "white")
+
+        self.settingsButtons.append(Button(self.inputs, self.window, lambda: self.quitSettings("wshard"), 700, 250, 850, 300))
+        self.settingsWidgets.append(self.canvas.create_rectangle(700, 250, 850, 300, fill = "#848484"))
+        self.settingsWidgets.append(self.canvas.create_text(775, 275, anchor = CENTER))
+        self.canvas.itemconfig(self.settingsWidgets[-1], text = "Wordle Wordsearch Hard Mode", font = ("DIN Condensed", 14, "bold"), fill = "white")
+
+        self.settingsButtons.append(Button(self.inputs, self.window, lambda: self.quitSettings(None), 25, 25, 125, 75))
+        self.settingsWidgets.append(self.canvas.create_rectangle(25, 25, 125, 75, fill = "red"))
+        self.settingsWidgets.append(self.canvas.create_text(75, 50, anchor = CENTER))
+        self.canvas.itemconfig(self.settingsWidgets[-1], text = "Back", font = ("DIN Condensed", 30, "bold"), fill = "white")
+
     def quitSettings(self, mode):
         self.start2()
         for i in self.settingsWidgets:
@@ -57,12 +72,11 @@ class SettingsDisplay:
         for i in self.settingsButtons:
             i.stop()
             del i
-        # if mode == None:
-        #     if isinstance(self.screen, Screen):
-        #         self.screen.resumeGame()
-        #     elif isinstance(self.screen, WSGUI):
-        #         self.screen.start()
         if mode == "normal":
             self.setmode(0)
         elif mode == "hard":
             self.setmode(1)
+        elif mode == "ws":
+            self.setmode(2)
+        elif mode == "wshard":
+            self.setmode(3)

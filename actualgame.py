@@ -75,7 +75,7 @@ def newgame():
         screen = Screen(canvas, window, gameOver, False, word, 6)
     elif mode == 1:
         word = all_words.getRandom()
-        screen = Screen(canvas, window, gameOver)
+        screen = Screen(canvas, window, gameOver, True, word, 6)
     elif mode == 2:
         ws = WordSearch(16,16)
         ws.genWordSearch()
@@ -107,8 +107,11 @@ def actualgame():
     displaySettings = SettingsDisplay(canvas, window, inputs, screen, setmode, start, stop)
     statsDisplayer = StatsDisplayer(canvas, window, inputs, start, stop, "uwu", 6)
 
-    canvas.create_rectangle(0,0,50,50,outline = "", fill = "red")
-    newGameButton = button.Button(inputs, window, newgame, 0, 0, 50, 50)
+    canvas.create_rectangle(0,0,100,50,outline = "", fill = "orange")
+    newGameButton = button.Button(inputs, window, newgame, 0, 0, 100, 50)
+    newGameText = canvas.create_text(50, 25, anchor = CENTER)
+    canvas.itemconfig(newGameText, text = "New Game", font = ("DIN Condensed", 30, "bold"), fill = "blue")
+
     newgame()
     window.mainloop()
 actualgame()
