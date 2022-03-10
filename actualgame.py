@@ -20,12 +20,19 @@ mode = 0
 
 inGame = False
 
+"""
+gameOver
+Input: int
+tries = number of tries, -1 if lose
+"""
 def gameOver(tries):
     global window
     if tries == -1:
         window.after(1000, gameover, 0, 0)
     else:
         window.after(1000, gameover, 1, tries)
+
+#helper function, dont call
 def gameover(win, tries):
     global displaySettings 
     global statsDisplayer 
@@ -35,6 +42,7 @@ def gameover(win, tries):
     statsDisplayer.updateStats(win, tries)
     statsDisplayer.open()
 
+# stops the current running game
 def stop():
     global displaySettings 
     global statsDisplayer 
@@ -45,6 +53,7 @@ def stop():
     statsDisplayer.stop()
     displaySettings.stop()
 
+#starts the current running game
 def start():
     global displaySettings 
     global statsDisplayer 
@@ -55,6 +64,7 @@ def start():
     statsDisplayer.start()
     displaySettings.start()
 
+#creates a new game
 def newgame():
     if pause:
         return
@@ -90,9 +100,19 @@ def newgame():
         print(ws.getTarget())
         screen = WSGUI(ws, inputs, canvas, window, gameOver, True)
         screen.start()
+
+"""
+sets mode
+0: wordle
+1: wordle hard mode
+2: wordlesearch
+3: wordlesearch hard mode
+"""
 def setmode(m):
     global mode
     mode = m
+
+#main function to start gui
 def actualgame():
     global displaySettings 
     global statsDisplayer 

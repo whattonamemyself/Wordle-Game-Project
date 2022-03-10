@@ -15,7 +15,15 @@ direction = [
     (0,-1),
     (1,-1)
 ]
+
+#class WordDisplayer: displays a wordleword with a nice animation
 class WordDisplayer:
+    """
+    Initializer
+    inputs: WordleWord, tuple(int,int)
+    wordleword: word you want to display
+    pos: position where you want to display it
+    """
     def __init__(self, wordleWord, pos):
         self.wordleWord = wordleWord
         self.p = pos
@@ -26,10 +34,8 @@ class WordDisplayer:
         self.tick = 0 # counts frames to to control duration
         for i in range(len(self.pos)):
             self.pos[i] = [self.p[0] + ((len(self.pos) - 1) / 2) * self.const, pos[1]]
-    #assumes that the size of the input is the same as the size of the original word uwu
-    def setWordleWord(self, wordleword): 
-        uwu = wordleword
-        #self.wordleword = wordleword
+    
+    #upd: call every frame to render the word for the frame
     def upd(self, canvas, canvasItems):
         for i in range(len(self.pos)):
             if self.tick > i:  
@@ -50,6 +56,13 @@ class WordDisplayer:
         self.tick += 1
 
 class WSGUI():
+    """
+    Initializer
+    Inputs: WordSearch, InputWrapper, Tkinter Canvas, Tkinter Window, Function, Bool
+    ws: word search that you want to displayer
+    gameover: function that this function calls to notify that it has completed a game
+    isHard: true if hard mode, false if not
+    """
     def __init__(self,ws,inputs,canvas, window, gameover, isHard):
         self.wordsearch = ws
         self.inputs = inputs
@@ -85,16 +98,40 @@ class WSGUI():
                 self.otherCanvasItems.append(text)
                 color = "black" if isHard else "white"
                 canvas.itemconfig(text, text=self.wordsearch.getGrid()[x][y],font = "Rubik 12 bold", fill = color)
+    
+    def start(self):
+        self.active = True
+        self.ended = False
+        self.update()
+        
+    def stop(self):
+        self.active = False
+    #end: cleans up everything, call before deleting class
+    def end(self):
+        self.ended = True
+        self.active = False
+        for x in self.otherCanvasItems:
+            self.canvas.delete(x)
+
+    #getPos: converts position to index on grid
+    #inputs:int,int
     def getPos(self, x, y):
         h = self.wordsearch.getHeight()
         return [round((x - 75)/30), round((h * 30 - y + 50)/30)]
+    #getPos2: converts index on grid to position
+    #inputs:int,int
     def getPos2(self, x, y):
         h = self.wordsearch.getHeight()
         return [x * 30 + 75, h * 30 - y * 30 + 50]
     
+    #inside: is x,y in the rectangle of x1, y1, x2, y2
+    #inputs: int,int,int,int,int,int
     def inside(self, x, y, x1, y1, x2, y2):
         return x >= x1 and x <= x2 and y >= y1 and y <= y2
 
+    #renderHL: renders a highlight
+    #inputs: list(int,int,int,int) 
+    #hl: list(x1, y1, x2, y2)
     def renderHL(self, hl, col = "#69D420"):
             tmp = self.canvas.create_line(hl[0],hl[1],hl[2],hl[3], width = 30, fill = col)
             self.canvas.lower(tmp)
@@ -106,7 +143,8 @@ class WSGUI():
             self.canvas.lower(tmp)
             self.canvasItems.append(tmp)
 
-    def manageGuesses(self): # deals with the guesses
+    #helper function to split the update function into 2, deals with guesses
+    def manageGuesses(self): 
         text = self.canvas.create_text(919,69, anchor = tk.NW)
         self.canvas.itemconfig(text, text="☑",font = "Courier 80", fill = "black") #renders checkmark
         self.canvasItems.append(text)
@@ -163,17 +201,7 @@ class WSGUI():
             self.renderHL(guess, "#69F6F9")
         self.alphaDisplay.setWordleWord(self.alpha)
         self.alphaDisplay.upd(self.canvas, self.canvasItems)
-    def start(self):
-        self.active = True
-        self.ended = False
-        self.update()
-    def stop(self):
-        self.active = False
-    def end(self):
-        self.ended = True
-        self.active = False
-        for x in self.otherCanvasItems:
-            self.canvas.delete(x)
+
     def update(self): #updates every frame
         if not self.active:
             if self.ended:
