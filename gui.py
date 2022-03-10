@@ -5,8 +5,9 @@ from wordleword import WordleWord
 from confettiuwu import Confetti
 
 class Screen:   
-    def __init__(self, canvas, window,gameover, isHard, word, maxguess):
+    def __init__(self, canvas, window, gameover, isHard, word, maxguess):
         self.gameOver = gameover
+        self.gameEnd = False
         self.maxguess = maxguess
         self.hasWon = False
         self.isHard = isHard
@@ -159,14 +160,16 @@ class Screen:
         if self.hasWon:
             self.confetti.stop()
             self.confetti.__init__(self.canvas, self.window)
-            print("should be printing")
+            self.gameEnd = True
             self.window.after(0,self.confetti.update)
             self.window.after(0, self.gameOver, self.guess)
         elif self.guess >= self.maxguess:
+            self.gameEnd = True
             self.guess = -1
             self.window.after(0, self.gameOver, self.guess)
     def keyPressed(self, event):
         if self.inMode: return
+        if self.gameEnd: return
         if event.char in self.letters or event.char in self.letters.lower():
             if len(self.current) < 5:
                 self.current += event.char.lower()
