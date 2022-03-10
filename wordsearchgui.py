@@ -98,14 +98,15 @@ class WSGUI():
                 self.otherCanvasItems.append(text)
                 color = "black" if isHard else "white"
                 canvas.itemconfig(text, text=self.wordsearch.getGrid()[x][y],font = "Rubik 12 bold", fill = color)
-    
+
+    #stop: pauses the game
+    def stop(self):
+        self.active = False
+    #start: unpauses the game
     def start(self):
         self.active = True
         self.ended = False
         self.update()
-        
-    def stop(self):
-        self.active = False
     #end: cleans up everything, call before deleting class
     def end(self):
         self.ended = True
@@ -202,7 +203,8 @@ class WSGUI():
         self.alphaDisplay.setWordleWord(self.alpha)
         self.alphaDisplay.upd(self.canvas, self.canvasItems)
 
-    def update(self): #updates every frame
+    #update: updates every frame
+    def update(self): 
         if not self.active:
             if self.ended:
                 for x in self.canvasItems:
@@ -280,17 +282,3 @@ class WSGUI():
         self.mouseWasDown = self.inputs.isMouseDown()
         self.window.after(16, self.update)
 
-def main():
-    window = tk.Tk()
-    canvas = tk.Canvas(width = 1000, height = 600, bg = "black")
-    canvas.pack()
-    inputs = InputWrapper(canvas)
-    wordsearch = ws.WordSearch(15,15)
-    wordsearch.genWordSearch()
-    print(wordsearch.target)    
-    wsgui = WSGUI(wordsearch, inputs, canvas, window)
-    wsgui.start()
-    print("HII")
-    window.mainloop()
-if __name__ == "__main__":
-    main()
