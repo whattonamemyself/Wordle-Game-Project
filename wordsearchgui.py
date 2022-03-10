@@ -4,7 +4,7 @@ from inputwrapper import InputWrapper
 from wordleword import WordleWord
 from wordbank import WordBank
 from markguess import markGuess
-from confettiuwu import Confetti
+from confetti import Confetti
 direction = [
     (1,0),
     (1,1),
