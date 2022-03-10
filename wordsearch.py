@@ -59,8 +59,8 @@ class WordSearch:
             x += direction[dir][0]
             y += direction[dir][1]
         return res
-
-    def placeWord(self, wsword): #places word //note: assumes that the word can be placed
+    #places word //note: assumes that the word can be placed
+    def placeWord(self, wsword): 
         (x, y) = (wsword.getX(), wsword.getY())
         dir = wsword.getDir()
         word = wsword.getWord()
@@ -133,7 +133,6 @@ class WordSearch:
             for x in range(len(self.ch[0])):
                 if self.ch[i][x] == None:
                     self.ch[i][x] = allchars.getRandom()
-        print(len(self.wordlist))
         self.target = random.choice(self.wordlist)
         return self.target
     #returns the string of text
@@ -176,12 +175,3 @@ class WordSearch:
         return len(self.ch[0])
     def getGrid(self):
         return self.ch
-
-def main():
-    x = WordSearch(24,14)
-    target = x.genWordSearch()
-    print(target)
-    print(x)
-
-if __name__ == "__main__":
-    main()

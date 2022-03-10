@@ -34,7 +34,10 @@ class WordDisplayer:
         self.tick = 0 # counts frames to to control duration
         for i in range(len(self.pos)):
             self.pos[i] = [self.p[0] + ((len(self.pos) - 1) / 2) * self.const, pos[1]]
-    
+    #sets wordleword
+    #input: wordleWord
+    def setWordleWord(self, wordleWord):
+        self.wordleword = wordleWord
     #upd: call every frame to render the word for the frame
     def upd(self, canvas, canvasItems):
         for i in range(len(self.pos)):
