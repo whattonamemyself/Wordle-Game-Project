@@ -82,11 +82,11 @@ def playRound(player, words, all_words, settings):
             print()
             print("The word was: " + word)
             print()
-            player.updateStats(False, -1)
+            player[0].updateStats(False, -1)
         else:
             print("Good job, you figured out the word")
             print()
-            player.updateStats(True, cnt)
+            player[0].updateStats(True, cnt)
             
 
 
@@ -111,7 +111,7 @@ def playWordle():
 
     stillplaying = True
     while stillplaying:
-        playRound(player, common5letter, all_words, settings)
+        playRound([player], common5letter, all_words, settings)
         playAgain = input("Did you want to play again? (y/n): ").lower()
         if not (playAgain == "yes" or playAgain == "y"):
             stillplaying = False
